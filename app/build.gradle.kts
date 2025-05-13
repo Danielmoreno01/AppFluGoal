@@ -46,6 +46,8 @@ android {
 dependencies {
     // Librerías de Google Ads (solo una)
     implementation("com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk:0.15.1-alpha01")
+    implementation(libs.androidx.navigation.compose.jvmstubs)
+    implementation(libs.cronet.embedded)
 
     // Core desugaring para soporte de nuevas APIs de Java
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
