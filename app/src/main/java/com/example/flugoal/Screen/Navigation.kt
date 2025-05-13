@@ -24,10 +24,6 @@ fun AppNavigation() {
             RegisterScreen(navController)
         }
 
-        composable("avatar") {
-            AvatarScreen(navController)
-        }
-
         // Agrega aquí otros composables si decides usar las otras clases (como Meta.kt o Perfil.kt) directamente
 
     }
