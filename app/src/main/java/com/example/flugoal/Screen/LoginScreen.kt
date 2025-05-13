@@ -1,24 +1,23 @@
 package com.example.flugoal
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 
 @Composable
 fun LoginScreen(navController: NavController) {
-    val username = remember { mutableStateOf("") }
-    val password = remember { mutableStateOf("") }
+    val imageUrl = "https://uniminuto0-my.sharepoint.com/:i:/g/personal/cristian_cano-v_uniminuto_edu_co/EQ4tYamwUFJJnJHNJ4mKbSoBDADoq49cXngD7LO5FlYNmw?e=ZobgCh" // Reemplaza con tu URL directa desde OneDrive
 
     Column(
         modifier = Modifier
@@ -26,37 +25,51 @@ fun LoginScreen(navController: NavController) {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Login", style = MaterialTheme.typography.titleMedium)
+        RemoteImage(imageUrl)
 
-        TextField(
-            value = username.value,
-            onValueChange = { username.value = it },
-            label = { Text("Username") },
-            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text(
+            text = "Bienvenido a FluGoal",
+            style = MaterialTheme.typography.headlineSmall
         )
 
-        TextField(
-            value = password.value,
-            onValueChange = { password.value = it },
-            label = { Text("Password") },
-            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-            visualTransformation = PasswordVisualTransformation()
+        Text(
+            text = "Inicia sesión o regístrate para continuar",
+            style = MaterialTheme.typography.bodyMedium
         )
 
-        Button(onClick = {
-            navController.navigate("home")
-        }) {
-            Text("Login")
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Button(
+            onClick = { navController.navigate("login_with_email") },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Iniciar Sesión")
         }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
-        Button(onClick = {
-            navController.navigate("signup")
-        }) {
-            Text("Create an Account")
+        OutlinedButton(
+            onClick = { navController.navigate("register") },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Registrarse")
         }
     }
+}
+
+@Composable
+fun RemoteImage(url: String) {
+    val painter = rememberAsyncImagePainter(model = url)
+
+    Image(
+        painter = painter,
+        contentDescription = "Imagen de bienvenida",
+        modifier = Modifier
+            .height(200.dp)
+            .fillMaxWidth()
+    )
 }
 
 @Preview(showBackground = true)

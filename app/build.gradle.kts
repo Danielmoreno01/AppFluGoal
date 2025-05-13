@@ -46,7 +46,6 @@ android {
 dependencies {
     // Librerías de Google Ads (solo una)
     implementation("com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk:0.15.1-alpha01")
-    implementation(libs.androidx.navigation.compose.jvmstubs)
     implementation(libs.cronet.embedded)
 
     // Core desugaring para soporte de nuevas APIs de Java
@@ -77,6 +76,8 @@ dependencies {
     implementation(libs.androidx.material3)
 
     // Testing
+    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

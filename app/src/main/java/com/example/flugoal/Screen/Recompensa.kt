@@ -15,15 +15,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.flugoal.Model.Recompensa
 
-data class Recompensa(
-    val titulo: String,
-    val descripcion: String,
-    val fecha: String,
-    val valor: Int
-)
 
-@Composable
+/*@Composable
 fun RecompensaScreen(
     recompensas: List<Recompensa> = listOf(
         Recompensa("Café Gratis ☕", "Canjea por un café en tu tienda favorita", "10 May 2025", 100),
@@ -91,3 +86,4 @@ fun RecompensaScreen(
 fun RecompensaScreenPreview() {
     RecompensaScreen()
 }
+*/

@@ -1,6 +1,6 @@
 package com.example.flugoal.Screen
 
-import androidx.compose.foundation.layout.*
+/*import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
@@ -53,4 +53,4 @@ fun UsuarioCard(usuario: Usuario) {
             Text(text = "Email: ${usuario.email}", style = MaterialTheme.typography.bodyMedium)
         }
     }
-}
+}*/

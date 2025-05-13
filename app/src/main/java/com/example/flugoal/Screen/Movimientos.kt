@@ -15,15 +15,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.flugoal.Model.Movimiento
 
-data class Movimiento(
-    val descripcion: String,
-    val tipo: String, // "Ingreso" o "Gasto"
-    val monto: Double,
-    val fecha: String
-)
-
-@Composable
+/*@Composable
 fun MovimientoScreen(
     movimientos: List<Movimiento> = listOf(
         Movimiento("Pago de beca", "Ingreso", 500000.0, "10 May 2025"),
@@ -107,3 +101,4 @@ fun MovimientoScreen(
 fun MovimientoScreenPreview() {
     MovimientoScreen()
 }
+*/

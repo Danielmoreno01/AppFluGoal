@@ -18,13 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-data class ItemTienda(
-    val nombre: String,
-    val precio: Int,
-    val descripcion: String
-)
-
-val itemsDemo = listOf(
+/*val itemsDemo = listOf(
     ItemTienda("Fondo Azul", 100, "Personaliza tu fondo con un estilo azul oscuro"),
     ItemTienda("Icono Estrella", 150, "Icono especial para tareas completadas"),
     ItemTienda("Tema Oscuro", 200, "Activa un tema oscuro premium para tu app")
@@ -90,3 +84,4 @@ fun TiendaScreen(items: List<ItemTienda> = itemsDemo) {
 fun TiendaScreenPreview() {
     TiendaScreen()
 }
+*/
