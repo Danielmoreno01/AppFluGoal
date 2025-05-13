@@ -2,12 +2,18 @@ package com.example.flugoal.Interface
 
 import com.example.flugoal.Model.Avatar
 import com.example.flugoal.Model.Meta
+import com.example.flugoal.Model.Movimiento
+import com.example.flugoal.Model.Recompensa
+import com.example.flugoal.Model.Tarea
+import com.example.flugoal.Model.TiendaItem
+import com.example.flugoal.Model.Usuario
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 
 
 interface ApiService {
+
     @GET("/api/avatares")
     suspend fun obtenerAvatares(): List<Avatar>
 
@@ -32,10 +38,70 @@ interface ApiService {
     @DELETE("/api/metas/{id}")
     suspend fun eliminarMeta(@Path("id") id: Long)
 
+    @GET("/api/movimientos")
+    suspend fun obtenerMovimientos(): List<Movimiento>
+
+    @GET("/api/movimientos/{id}")
+    suspend fun obtenerMovimiento(@Path("id") id: Long): Movimiento
+
+    @POST("/api/movimientos")
+    suspend fun guardarMovimiento(@Body movimiento: Movimiento): Movimiento
+
+    @DELETE("/api/movimientos/{id}")
+    suspend fun eliminarMovimiento(@Path("id") id: Long)
+
+    @GET("/api/recompensas")
+    suspend fun obtenerRecompensas(): List<Recompensa>
+
+    @GET("/api/recompensas/{id}")
+    suspend fun obtenerRecompensa(@Path("id") id: Long): Recompensa
+
+    @POST("/api/recompensas")
+    suspend fun guardarRecompensa(@Body recompensa: Recompensa): Recompensa
+
+    @DELETE("/api/recompensas/{id}")
+    suspend fun eliminarRecompensa(@Path("id") id: Long)
+
+    @GET("/api/tareas")
+    suspend fun obtenerTareas(): List<Tarea>
+
+    @GET("/api/tareas/{id}")
+    suspend fun obtenerTarea(@Path("id") id: Long): Tarea
+
+    @POST("/api/tareas")
+    suspend fun guardarTarea(@Body tarea: Tarea): Tarea
+
+    @DELETE("/api/tareas/{id}")
+    suspend fun eliminarTarea(@Path("id") id: Long)
+
+    @GET("/api/tienda-items")
+    suspend fun obtenerItemsTienda(): List<TiendaItem>
+
+    @GET("/api/tienda-items/{id}")
+    suspend fun obtenerItemTienda(@Path("id") id: Long): TiendaItem
+
+    @POST("/api/tienda-items")
+    suspend fun guardarItemTienda(@Body item: TiendaItem): TiendaItem
+
+    @DELETE("/api/tienda-items/{id}")
+    suspend fun eliminarItemTienda(@Path("id") id: Long)
+
+    @GET("/api/usuarios")
+    suspend fun obtenerUsuarios(): List<Usuario>
+
+    @GET("/api/usuarios/{id}")
+    suspend fun obtenerUsuario(@Path("id") id: Long): Usuario
+
+    @POST("/api/usuarios")
+    suspend fun guardarUsuario(@Body usuario: Usuario): Usuario
+
+    @DELETE("/api/usuarios/{id}")
+    suspend fun eliminarUsuario(@Path("id") id: Long)
+
 }
 
 object RetrofitClient {
-    private const val BASE_URL = "http://10.0.2.2:8081"
+    private const val BASE_URL = "http://10.0.2.2:8080"
 
     val apiService: ApiService by lazy {
         Retrofit.Builder()
