@@ -9,12 +9,17 @@ import com.example.flugoal.AvatarScreen
 import com.example.flugoal.LoginScreen
 
 import com.example.flugoal.ui.screens.RegisterScreen
+import com.example.flugoal.ui.screens.WelcomeScreen
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "login") {
+    NavHost(navController = navController, startDestination = "welcome") {
+
+        composable("welcome") {
+            WelcomeScreen(navController)
+        }
 
         composable("login") {
             LoginScreen(navController)
@@ -24,7 +29,6 @@ fun AppNavigation() {
             RegisterScreen(navController)
         }
 
-        // Agrega aquí otros composables si decides usar las otras clases (como Meta.kt o Perfil.kt) directamente
 
     }
 }

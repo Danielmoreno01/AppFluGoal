@@ -1,329 +1,166 @@
 package com.example.flugoal
 
-
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.ExperimentalFoundationApi
+import android.graphics.RenderEffect
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
-
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-
-import coil.compose.rememberAsyncImagePainter
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-
-import androidx.compose.foundation.border
-
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-
-import androidx.compose.ui.graphics.Path
-
-import androidx.compose.ui.text.TextStyle
-
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import android.graphics.Shader
+import android.os.Build
+import androidx.compose.ui.graphics.asComposeRenderEffect
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 
 @Composable
 fun LoginScreen(navController: NavController) {
-    val imageUrls = listOf(
-        "https://drive.google.com/uc?export=download&id=1Wy3OERgKsQhthB-mtyhhQzjWKPNEomf8",
-        "https://drive.google.com/uc?export=download&id=1908z-047YryOk8MLo2xwMrCqeuDBsUjJ",
-        "https://drive.google.com/uc?export=download&id=116CwXTtht4xpMgBplr0JZLaK6aqcquQ6"
+
+    val robotoFont = FontFamily(
+        Font(R.font.concertone)
     )
 
-    // Define colors to match the design
-    val tealColor = Color(0xFF9FE0DC)
-    val orangeColor = Color(0xFFE85D2A)
-    val darkNavyColor = Color(0xFF1A2B3D)
+    Box(modifier = Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(id = R.drawable.fondoapp),
+            contentDescription = "Fondo desenfocado",
+            modifier = Modifier
+                .fillMaxSize()
+                .then(
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        Modifier.graphicsLayer {
+                            renderEffect = RenderEffect
+                                .createBlurEffect(20f, 20f, Shader.TileMode.CLAMP)
+                                .asComposeRenderEffect()
+                        }
+                    } else {
+                        Modifier
+                    }
+                ),
+            contentScale = ContentScale.Crop
+        )
 
-    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-    val imageHeight = screenHeight * 0.5f // Made carousel larger
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.3f))
+        )
 
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        // Background diagonal split (teal and orange)
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val path = Path().apply {
-                moveTo(0f, 0f)
-                lineTo(size.width, 0f)
-                lineTo(size.width, size.height)
-                lineTo(0f, size.height * 0.35f)
-                close()
-            }
-            drawPath(
-                path = path,
-                color = tealColor
-            )
-
-            val orangePath = Path().apply {
-                moveTo(0f, size.height * 0.35f)
-                lineTo(size.width, size.height)
-                lineTo(0f, size.height)
-                close()
-            }
-            drawPath(
-                path = orangePath,
-                color = orangeColor
-            )
-        }
-
-        // Login Card
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(20.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
+                .padding(horizontal = 40.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Top spacer
+
+            Text(
+                text = "Bienvenido",
+                fontSize = 40.sp,
+                fontWeight = FontWeight.Light,
+                color = Color(0xFF0A0101),
+                textAlign = TextAlign.Center,
+                fontFamily = robotoFont
+            )
+
+            Spacer(modifier = Modifier.height(100.dp))
+
+            OutlinedTextField(
+                value = "",
+                onValueChange = {},
+                placeholder = { Text("Correo Electrónico", color = Color.White.copy(alpha = 0.7f)) },
+                modifier = Modifier.fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedBorderColor = Color.White.copy(alpha = 0.5f),
+                    focusedBorderColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    focusedTextColor = Color.White,
+                    cursorColor = Color.White
+                ),
+                shape = RoundedCornerShape(24.dp),
+                singleLine = true
+            )
+
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Carousel positioned more to the top
-            ImageCarousel(imageUrls = imageUrls, imageHeight = imageHeight)
+            OutlinedTextField(
+                value = "",
+                onValueChange = {},
+                modifier = Modifier.fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    unfocusedBorderColor = Color.White.copy(alpha = 0.5f),
+                    focusedBorderColor = Color.White,
+                    unfocusedTextColor = Color.White,
+                    focusedTextColor = Color.White,
+                    cursorColor = Color.White
+                ),
+                shape = RoundedCornerShape(24.dp),
+                singleLine = true,
+                visualTransformation = VisualTransformation.None
+            )
 
-            // Login card
-            Card(
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(
+                onClick = { navController.navigate("login") },
+                colors = ButtonDefaults.buttonColors(containerColor = Color.White.copy(alpha = 0.2f)),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .shadow(8.dp, RoundedCornerShape(16.dp)),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                shape = RoundedCornerShape(16.dp)
+                    .height(50.dp)
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    // Account header
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = darkNavyColor,
-                                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
-                            )
-                            .padding(vertical = 12.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "My Account",
-                            style = TextStyle(
-                                color = Color.White,
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 18.sp
-                            )
-                        )
-                    }
-
-                    // Profile icon
-                    Box(
-                        modifier = Modifier
-                            .size(80.dp)
-                            .padding(top = 16.dp, bottom = 24.dp)
-                            .background(Color.LightGray, CircleShape)
-                            .border(2.dp, Color.White, CircleShape),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = "Profile",
-                            tint = Color.White,
-                            modifier = Modifier.size(40.dp)
-                        )
-                    }
-
-                    // Login fields
-                    OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp),
-                        label = { Text("Login") },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Email,
-                                contentDescription = "Email",
-                                tint = Color.Gray
-                            )
-                        },
-                        trailingIcon = {
-                            Switch(
-                                checked = true,
-                                onCheckedChange = {},
-                                colors = SwitchDefaults.colors(
-                                    checkedThumbColor = orangeColor,
-                                    checkedTrackColor = orangeColor.copy(alpha = 0.5f)
-                                )
-                            )
-                        },
-                        shape = RoundedCornerShape(8.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedBorderColor = Color.LightGray,
-                            focusedBorderColor = orangeColor
-                        )
-                    )
-
-                    OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 8.dp),
-                        label = { Text("Password") },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Lock,
-                                contentDescription = "Password",
-                                tint = Color.Gray
-                            )
-                        },
-                        shape = RoundedCornerShape(8.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            unfocusedBorderColor = Color.LightGray,
-                            focusedBorderColor = orangeColor
-                        )
-                    )
-
-                    // Forgot password link
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp),
-                        contentAlignment = Alignment.CenterEnd
-                    ) {
-                        Text(
-                            text = "Forgot password?",
-                            style = TextStyle(
-                                color = Color.Gray,
-                                fontSize = 12.sp
-                            )
-                        )
-                    }
-
-                    // Sign in button
-                    Button(
-                        onClick = { navController.navigate("logueo") },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = orangeColor
-                        )
-                    ) {
-                        Text(
-                            text = "Sign in",
-                            style = TextStyle(
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 16.sp
-                            )
-                        )
-                    }
-                }
+                Text(text = "Ingresar", color = Color.White)
             }
 
-            // Register button at bottom
-            TextButton(
-                onClick = { navController.navigate("register") },
-                modifier = Modifier.padding(bottom = 16.dp)
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "No tienes cuenta? Regístrate",
-                    style = TextStyle(
-                        color = darkNavyColor,
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 14.sp
-                    )
+                    "Olvidé la contraseña",
+                    color = Color.White,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(horizontal = 12.dp)
+                )
+
+                Text(
+                    "|",
+                    color = Color.White,
+                    fontSize = 14.sp
+                )
+
+                Text(
+                    "Registro",
+                    color = Color.White,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(horizontal = 12.dp),
+                    fontWeight = FontWeight.Medium
                 )
             }
         }
     }
 }
-@OptIn(ExperimentalFoundationApi::class)
+
+@Preview(showBackground = true)
 @Composable
-fun ImageCarousel(imageUrls: List<String>, imageHeight: Dp) {
-    val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
-
-    // Cambio automático de imagen cada 3 segundos
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(7000)
-            val nextIndex = (listState.firstVisibleItemIndex + 1) % imageUrls.size
-            coroutineScope.launch {
-                listState.animateScrollToItem(nextIndex)
-            }
-        }
-    }
-
-    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-    val itemWidth = screenWidth * 0.75f
-    val sidePadding = (screenWidth - itemWidth) / 2
-
-    Box(modifier = Modifier.height(imageHeight)) {
-        LazyRow(
-            state = listState,
-            contentPadding = PaddingValues(horizontal = sidePadding),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            items(imageUrls.size) { index ->
-                val painter = rememberAsyncImagePainter(imageUrls[index])
-                Box(
-                    modifier = Modifier
-                        .width(itemWidth)
-                        .height(imageHeight)
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(
-                            brush = Brush.verticalGradient(
-                                colors = listOf(
-                                    Color(0xFFe0f7fa), // azul claro
-                                    Color.White
-                                )
-                            )
-                        )
-                ) {
-                    Image(
-                        painter = painter,
-                        contentDescription = "Imagen carrusel",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(RoundedCornerShape(16.dp))
-                    )
-                }
-            }
-        }
-    }
+fun LoginScreenPreview() {
+    LoginScreen(navController = rememberNavController())
 }

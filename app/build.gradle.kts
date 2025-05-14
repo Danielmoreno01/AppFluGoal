@@ -41,12 +41,23 @@ android {
     buildFeatures {
         compose = true
     }
+
 }
 
 dependencies {
     // Librerías de Google Ads (solo una)
     implementation("com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk:0.15.1-alpha01")
     implementation(libs.cronet.embedded)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.foundation.layout.android)
+    implementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.animation.core.lint)
 
     // Core desugaring para soporte de nuevas APIs de Java
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
