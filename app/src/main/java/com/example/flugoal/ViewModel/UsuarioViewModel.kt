@@ -6,35 +6,31 @@ import androidx.lifecycle.viewModelScope
 import com.example.flugoal.Model.Usuario
 import com.example.flugoal.Repository.UsuarioRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class UsuarioViewModel : ViewModel() {
 
     private val repository = UsuarioRepository()
+    private val _correoExiste = MutableStateFlow<Boolean?>(null)
+    val correoExiste: StateFlow<Boolean?> get() = _correoExiste
 
     val usuarios = MutableLiveData<List<Usuario>?>(emptyList())
-
-    fun obtenerUsuarios() {
-        viewModelScope.launch {
-            val lista = withContext(Dispatchers.IO) {
-                repository.obtenerUsuarios()
-            }
-            usuarios.postValue(lista)
-        }
-    }
 
     fun guardarUsuario(usuario: Usuario) {
         viewModelScope.launch {
             repository.guardarUsuario(usuario)
-            obtenerUsuarios()
         }
     }
 
-    fun eliminarUsuario(id: Long) {
+    fun verificarCorreo(correo: String, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
-            repository.eliminarUsuario(id)
-            obtenerUsuarios()
+            val existe = repository.correoYaExiste(correo)
+            _correoExiste.value = existe
+            onResult(existe)
         }
     }
+
 }

@@ -1,11 +1,14 @@
 package com.example.flugoal.Screen
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.flugoal.AvatarScreen
 import com.example.flugoal.LoginScreen
 
 import com.example.flugoal.ui.screens.RegisterScreen
@@ -14,21 +17,32 @@ import com.example.flugoal.ui.screens.WelcomeScreen
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = currentBackStackEntry?.destination?.route
 
-    NavHost(navController = navController, startDestination = "welcome") {
+    val showBottomBar = currentRoute in bottomNavItems.map { it.route }
 
-        composable("welcome") {
-            WelcomeScreen(navController)
+    Scaffold(
+        bottomBar = {
+            if (showBottomBar) {
+                BottomNavBar(navController, currentRoute)
+            }
         }
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = "welcome",
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable("welcome") { WelcomeScreen(navController) }
+            composable("login") { LoginScreen(navController) }
+            composable("register") { RegisterScreen(navController) }
 
-        composable("login") {
-            LoginScreen(navController)
+            composable("home") { HomeScreen(navController) }
+            composable("gastos") { /* TODO: GastosScreen(navController) */ }
+            composable("ingresos") { /* TODO: IngresosScreen(navController) */ }
+            composable("perfil") { /* TODO: PerfilScreen(navController) */ }
         }
-
-        composable("register") {
-            RegisterScreen(navController)
-        }
-
 
     }
 }

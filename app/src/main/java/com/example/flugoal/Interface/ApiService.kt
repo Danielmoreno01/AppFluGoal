@@ -7,6 +7,7 @@ import com.example.flugoal.Model.Recompensa
 import com.example.flugoal.Model.Tarea
 import com.example.flugoal.Model.TiendaItem
 import com.example.flugoal.Model.Usuario
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
@@ -86,18 +87,11 @@ interface ApiService {
     @DELETE("/api/tienda-items/{id}")
     suspend fun eliminarItemTienda(@Path("id") id: Long)
 
-    @GET("/api/usuarios")
-    suspend fun obtenerUsuarios(): List<Usuario>
-
-    @GET("/api/usuarios/{id}")
-    suspend fun obtenerUsuario(@Path("id") id: Long): Usuario
+    @GET("/api/usuarios/correo/{correo}")
+    suspend fun verificarCorreoExistente(@Path("correo") correo: String): Response<Boolean>
 
     @POST("/api/usuarios")
     suspend fun guardarUsuario(@Body usuario: Usuario): Usuario
-
-    @DELETE("/api/usuarios/{id}")
-    suspend fun eliminarUsuario(@Path("id") id: Long)
-
 }
 
 object RetrofitClient {
