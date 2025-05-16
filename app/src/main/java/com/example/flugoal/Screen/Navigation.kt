@@ -10,7 +10,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.flugoal.LoginScreen
-
 import com.example.flugoal.ui.screens.RegisterScreen
 import com.example.flugoal.ui.screens.WelcomeScreen
 
@@ -25,7 +24,7 @@ fun AppNavigation() {
     Scaffold(
         bottomBar = {
             if (showBottomBar) {
-                BottomNavBar(navController, currentRoute)
+                BottomNavBar(navController = navController, currentRoute = currentRoute) {}
             }
         }
     ) { innerPadding ->
@@ -37,12 +36,13 @@ fun AppNavigation() {
             composable("welcome") { WelcomeScreen(navController) }
             composable("login") { LoginScreen(navController) }
             composable("register") { RegisterScreen(navController) }
-
+            composable("movimientos") { MovimientosScreen(navController) }
             composable("home") { HomeScreen(navController) }
-            composable("gastos") { /* TODO: GastosScreen(navController) */ }
-            composable("ingresos") { /* TODO: IngresosScreen(navController) */ }
-            composable("perfil") { /* TODO: PerfilScreen(navController) */ }
+            composable("nuevo_movimiento") { NuevoMovimientoScreen(navController) }
+            composable("avatares") { AvatarScreen(navController) }
+            composable("metas") { MetasScreen(navController) }
+            composable("perfil") { PerfilScreen(navController) } // ← Aquí solo contenido, sin Scaffold
+            composable("tareas") { TareasScreen(navController) }
         }
-
     }
 }

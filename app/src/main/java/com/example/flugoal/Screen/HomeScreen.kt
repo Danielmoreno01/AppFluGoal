@@ -39,7 +39,7 @@ import com.example.flugoal.LoginScreen
 import com.example.flugoal.Model.MenuItem
 
 @Composable
-fun HomeScreen(navController: NavController, userName: String = "Carlos") {
+fun HomeScreen(navController: NavController, userName: String = "._. User") {
     // Definición de colores para las tarjetas (colores claros variados)
     val cardColors = listOf(
         Color(0xFFABD7B9), // Rosa claro
@@ -55,12 +55,9 @@ fun HomeScreen(navController: NavController, userName: String = "Carlos") {
     )
 
     val menuItems = listOf(
-        MenuItem("Gastos", Icons.Default.List, "gastos"),
-        MenuItem("Ingresos", Icons.Default.KeyboardArrowRight, "ingresos"),
+        MenuItem("Movimientos", Icons.AutoMirrored.Filled.ExitToApp, "movimientos"),
         MenuItem("Metas", Icons.Default.Star, "metas"),
         MenuItem("Información", Icons.Default.Info, "info"),
-        MenuItem("Movimientos", Icons.AutoMirrored.Filled.ExitToApp, "movimientos"),
-        MenuItem("Recompensas", Icons.Default.Favorite, "recompensas"),
         MenuItem("Tareas", Icons.Default.CheckCircle, "tareas"),
         MenuItem("Avatares", Icons.Default.AccountCircle, "avatares"),
         MenuItem("Tienda", Icons.Default.ShoppingCart, "tienda"),

@@ -5,7 +5,7 @@ data class Movimiento(
     val tipo: String,
     val monto: Double,
     val fecha: String, // formato ISO 8601 (yyyy-MM-dd)
-    val descripcion: String,
+    val descripcion: String? = null,
     val usuario: Usuario? = null,
     val presupuesto: Meta? = null
 )
