@@ -24,7 +24,11 @@ fun AppNavigation() {
     Scaffold(
         bottomBar = {
             if (showBottomBar) {
-                BottomNavBar(navController = navController, currentRoute = currentRoute) {}
+                BottomNavBar(
+                    navController = navController,
+                    currentRoute = currentRoute,
+                    onCreateClick = { navController.navigate("nuevo_movimiento") }
+                )
             }
         }
     ) { innerPadding ->
@@ -38,11 +42,12 @@ fun AppNavigation() {
             composable("register") { RegisterScreen(navController) }
             composable("movimientos") { MovimientosScreen(navController) }
             composable("home") { HomeScreen(navController) }
-            composable("nuevo_movimiento") { NuevoMovimientoScreen(navController) }
+            composable("nuevo_movimiento") { NuevoMovimientoScreen(navController) } // ✅ Aquí
             composable("avatares") { AvatarScreen(navController) }
             composable("metas") { MetasScreen(navController) }
-            composable("perfil") { PerfilScreen(navController) } // ← Aquí solo contenido, sin Scaffold
+            composable("perfil") { PerfilScreen(navController) }
             composable("tareas") { TareasScreen(navController) }
+            composable("informacion") { InformacionScreen(navController) }
         }
     }
 }

@@ -87,3 +87,5 @@ fun TareasScreen(navController: NavHostController) {
         }
     )
 }
+//agreguemos esto con las apis
+//pongamos a trabajar este screen par que ya quede al diaa y muestre una lista con las tareas asignadas asi mismo estas tareas debe enviaarlas a informacionScreen
