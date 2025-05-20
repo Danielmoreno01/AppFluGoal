@@ -57,12 +57,13 @@ fun HomeScreen(navController: NavController, userName: String = "._. User") {
     val menuItems = listOf(
         MenuItem("Movimientos", Icons.AutoMirrored.Filled.ExitToApp, "movimientos"),
         MenuItem("Metas", Icons.Default.Star, "metas"),
-        MenuItem("Información", Icons.Default.Info, "info"),
+        MenuItem("Metas de Usuario", Icons.Default.Info, "listar_metas_usuario"),
         MenuItem("Tareas", Icons.Default.CheckCircle, "tareas"),
         MenuItem("Avatares", Icons.Default.AccountCircle, "avatares"),
         MenuItem("Tienda", Icons.Default.ShoppingCart, "tienda"),
         MenuItem("Perfil", Icons.Default.Person, "perfil")
     )
+
 
     Column(
         modifier = Modifier

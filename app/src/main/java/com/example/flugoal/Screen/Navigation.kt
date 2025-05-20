@@ -48,6 +48,11 @@ fun AppNavigation() {
             composable("perfil") { PerfilScreen(navController) }
             composable("tareas") { TareasScreen(navController) }
             composable("informacion") { InformacionScreen(navController) }
+            composable("listar_metas_usuario") {ListarMetasUsuarioScreen(navController)
         }
     }
+    }
+
 }
+
+

@@ -5,10 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.material3.ExposedDropdownMenuDefaults.textFieldColors
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,7 +40,7 @@ fun NuevoMovimientoScreen(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(20.dp),
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val tipoState = remember { mutableStateOf("") }
@@ -58,21 +55,10 @@ fun NuevoMovimientoScreen(navController: NavHostController) {
 
             Text(
                 text = "Nuevo Movimiento",
-                fontSize = 26.sp,
-                color = Color(0xFF00BFFF),
-                textAlign = TextAlign.Center
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            TextField(
-                value = "0",
-                onValueChange = {},
-                label = { Text("ID") },
-                readOnly = true,
-                enabled = false,
-                colors = textFieldColors(),
-                modifier = Modifier.fillMaxWidth()
+                fontSize = 28.sp,
+                color = Color.White,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(vertical = 16.dp)
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -80,10 +66,14 @@ fun NuevoMovimientoScreen(navController: NavHostController) {
             TextField(
                 value = fechaActual,
                 onValueChange = {},
-                label = { Text("Fecha") },
+                label = { Text("Fecha", color = Color.LightGray) },
                 readOnly = true,
                 enabled = false,
-                colors = textFieldColors(),
+                colors = textFieldColors(
+                    disabledTextColor = Color.White,
+                    disabledLabelColor = Color.LightGray,
+                    disabledContainerColor = Color(0xFF1A1B3A)
+                ),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -97,9 +87,14 @@ fun NuevoMovimientoScreen(navController: NavHostController) {
                     value = tipoState.value,
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("Tipo") },
+                    label = { Text("Tipo", color = Color.LightGray) },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedState.value) },
-                    colors = textFieldColors(),
+                    colors = textFieldColors(
+                        focusedContainerColor = Color(0xFF1A1B3A),
+                        unfocusedContainerColor = Color(0xFF1A1B3A),
+                        focusedLabelColor = Color(0xFF00BFFF),
+                        unfocusedLabelColor = Color.LightGray
+                    ),
                     modifier = Modifier
                         .menuAnchor()
                         .fillMaxWidth()
@@ -125,8 +120,14 @@ fun NuevoMovimientoScreen(navController: NavHostController) {
             TextField(
                 value = montoState.value,
                 onValueChange = { montoState.value = it },
-                label = { Text("Monto") },
+                label = { Text("Monto", color = Color.LightGray) },
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                colors = textFieldColors(
+                    focusedContainerColor = Color(0xFF1A1B3A),
+                    unfocusedContainerColor = Color(0xFF1A1B3A),
+                    focusedLabelColor = Color(0xFF00BFFF),
+                    unfocusedLabelColor = Color.LightGray
+                ),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -135,7 +136,13 @@ fun NuevoMovimientoScreen(navController: NavHostController) {
             TextField(
                 value = descripcionState.value,
                 onValueChange = { descripcionState.value = it },
-                label = { Text("Descripción") },
+                label = { Text("Descripción", color = Color.LightGray) },
+                colors = textFieldColors(
+                    focusedContainerColor = Color(0xFF1A1B3A),
+                    unfocusedContainerColor = Color(0xFF1A1B3A),
+                    focusedLabelColor = Color(0xFF00BFFF),
+                    unfocusedLabelColor = Color.LightGray
+                ),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -144,32 +151,44 @@ fun NuevoMovimientoScreen(navController: NavHostController) {
                 TextField(
                     value = metaState.value,
                     onValueChange = { metaState.value = it },
-                    label = { Text("Meta asociada (ID)") },
+                    label = { Text("Meta asociada (ID)", color = Color.LightGray) },
+                    colors = textFieldColors(
+                        focusedContainerColor = Color(0xFF1A1B3A),
+                        unfocusedContainerColor = Color(0xFF1A1B3A),
+                        focusedLabelColor = Color(0xFF00BFFF),
+                        unfocusedLabelColor = Color.LightGray
+                    ),
                     modifier = Modifier.fillMaxWidth()
                 )
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Button(onClick = {
-                CoroutineScope(Dispatchers.IO).launch {
-                    try {
-                        val movimiento = Movimiento(
-                            tipo = tipoState.value,
-                            monto = montoState.value.toDoubleOrNull() ?: 0.0,
-                            fecha = fechaActual,
-                            descripcion = descripcionState.value.ifBlank { null },
-                            usuarioId = 1L,
-                            metaId = if (tipoState.value == "Ahorro" && metaState.value.isNotBlank()) metaState.value.toLongOrNull() else null
-                        )
-                        // RetrofitClient.apiService.guardarMovimiento(movimiento)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+            Button(
+                onClick = {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        try {
+                            val movimiento = Movimiento(
+                                tipo = tipoState.value,
+                                monto = montoState.value.toDoubleOrNull() ?: 0.0,
+                                fecha = fechaActual,
+                                descripcion = descripcionState.value.ifBlank { null },
+                                usuarioId = 1L,
+                                metaId = if (tipoState.value == "Ahorro" && metaState.value.isNotBlank()) metaState.value.toLongOrNull() else null
+                            )
+                            // RetrofitClient.apiService.guardarMovimiento(movimiento)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
-                }
-                navController.popBackStack()
-            }) {
-                Text("Guardar Movimiento")
+                    navController.popBackStack()
+                },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00BFFF)),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(55.dp)
+            ) {
+                Text("Guardar Movimiento", fontSize = 16.sp, color = Color.White)
             }
         }
     }
