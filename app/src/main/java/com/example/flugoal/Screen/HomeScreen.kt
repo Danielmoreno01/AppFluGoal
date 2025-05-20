@@ -75,15 +75,11 @@ fun HomeScreen(navController: NavController, usuarioViewModel: UsuarioViewModel)
     val menuItems = listOf(
         MenuItem("Informacion General", Icons.Default.Info, "info"),
         MenuItem("Ver Metas", Icons.Default.Star, "lista_metas"), // *
-        MenuItem("Historial de Movimientos", Icons.AutoMirrored.Filled.ExitToApp, "historial_movimientos"),
-        MenuItem("Historial de Egresos", Icons.Default.List, "egresos"),
-        MenuItem("Historial de Ingresos", Icons.Default.KeyboardArrowRight, "ingresos"),
-        MenuItem("Historial de Ingresos a Metas", Icons.Default.Favorite, "ingresos_metas"),
+        MenuItem("Historial de Movimientos", Icons.AutoMirrored.Filled.ExitToApp, "lista_movimientos"),
+        MenuItem("Egresos", Icons.Default.List, "lista_egresos"),
+        MenuItem("Ingresos", Icons.Default.KeyboardArrowRight, "lista_ingresos"),
+        MenuItem("Ingresos a Metas", Icons.Default.Favorite, "ingresos_metas"),
         MenuItem("Dinero Ahorrado", Icons.Default.Star, "dinero_ahorrado"),
-        MenuItem("Tareas", Icons.Default.CheckCircle, "tareas"),
-        MenuItem("Avatares", Icons.Default.AccountCircle, "avatares"),
-        MenuItem("Tienda", Icons.Default.ShoppingCart, "tienda"),
-        MenuItem("Perfil", Icons.Default.Person, "perfil")
     )
 
     Column(

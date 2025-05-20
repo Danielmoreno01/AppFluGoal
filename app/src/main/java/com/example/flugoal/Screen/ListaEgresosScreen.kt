@@ -1,7 +1,6 @@
 package com.example.flugoal.Screen
 
 import android.util.Log
-import android.widget.CalendarView
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -9,14 +8,15 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,13 +24,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -41,9 +43,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -54,26 +54,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.flugoal.Model.Meta
+import com.example.flugoal.Model.Movimiento
 import com.example.flugoal.R
-import com.example.flugoal.ViewModel.MetaViewModel
 import com.example.flugoal.ViewModel.MovimientoViewModel
 import com.example.flugoal.ViewModel.UsuarioViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListaMetasScreen(navController: NavController, usuarioViewModel: UsuarioViewModel) {
+fun ListaEgresosScreen(navController: NavController, usuarioViewModel: UsuarioViewModel) {
     val usuarioId = usuarioViewModel.usuarioId.collectAsState().value
-    val metaViewModel: MetaViewModel = viewModel()
     val movimientoViewModel: MovimientoViewModel = viewModel()
-    val metas by metaViewModel.metas.collectAsState()
+    val egresosMovimientos by movimientoViewModel.egresosMovimientos.collectAsState()
     val robotoFont = FontFamily(Font(R.font.concertone))
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
@@ -86,7 +79,7 @@ fun ListaMetasScreen(navController: NavController, usuarioViewModel: UsuarioView
     )
 
     LaunchedEffect(usuarioId) {
-        usuarioId?.let { metaViewModel.cargarMetasPorUsuario(it.toString()) }
+        usuarioId?.let { movimientoViewModel.cargarEgresosPorUsuario(it) }
     }
 
     Scaffold(
@@ -96,7 +89,7 @@ fun ListaMetasScreen(navController: NavController, usuarioViewModel: UsuarioView
             TopAppBar(
                 title = {
                     Text(
-                        text = "Mis Metas",
+                        text = "Mis Egresos",
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF080C23),
@@ -119,39 +112,19 @@ fun ListaMetasScreen(navController: NavController, usuarioViewModel: UsuarioView
             .fillMaxSize()
             .background(animatedColor)) {
 
-            AndroidView(
-                factory = { CalendarView(context) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) { calendarView ->
-                calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
-                    val clickedDate = LocalDate.of(year, month + 1, dayOfMonth)
-                    val metaEncontrada = metas.firstOrNull {
-                        it.fechaFin == clickedDate.toString()
-                    }
-                    metaEncontrada?.let {
-                        CoroutineScope(Dispatchers.Main).launch {
-                            snackbarHostState.showSnackbar("Meta: ${it.nombre}")
-                        }
-                    }
-                }
-            }
-
             LazyColumn {
-                items(metas) { meta ->
-                    MetaItemStyled(
-                        meta = meta,
-                        movimientoViewModel = movimientoViewModel,
+                items(egresosMovimientos) { movimiento ->
+                    EgresoItemStyled(
+                        movimiento = movimiento,
                         fontFamily = robotoFont,
                         onEdit = {
-                            meta.id?.let { navController.navigate("editar_meta/$it") }
+                            movimiento.id?.let { navController.navigate("editar_egreso/$it") }
                         },
                         onDelete = {
-                            meta.id?.let {
-                                metaViewModel.eliminarMeta(it,
-                                    onSuccess = { usuarioId?.let { id -> metaViewModel.cargarMetasPorUsuario(id) } },
-                                    onError = { Log.e("ListaMetasScreen", "Error: $it") }
+                            movimiento.id?.let {
+                                movimientoViewModel.eliminarMovimiento(it.toInt(),
+                                    onSuccess = { usuarioId?.let { id -> movimientoViewModel.cargarEgresosPorUsuario(id.toString()) } },
+                                    onError = { errorMsg -> Log.e("ListaEgresosScreen", "Error: $errorMsg") }
                                 )
                             }
                         }
@@ -161,27 +134,13 @@ fun ListaMetasScreen(navController: NavController, usuarioViewModel: UsuarioView
         }
     }
 }
-
 @Composable
-fun MetaItemStyled(
-    meta: Meta,
-    movimientoViewModel: MovimientoViewModel,
+fun EgresoItemStyled(
+    movimiento: Movimiento,
     fontFamily: FontFamily,
     onEdit: () -> Unit,
     onDelete: () -> Unit
 ) {
-    var totalIngresado by remember { mutableStateOf<Double?>(null) }
-
-    LaunchedEffect(meta.id) {
-        meta.id?.let {
-            totalIngresado = movimientoViewModel.obtenerTotalIngresadoEnMetaDirecto(it)
-        }
-    }
-
-    val porcentaje = if (totalIngresado != null && meta.montoTotal > 0) {
-        (totalIngresado!! / meta.montoTotal).coerceAtMost(1.0)
-    } else 0.0
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -195,28 +154,29 @@ fun MetaItemStyled(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column(Modifier.weight(1f)) {
-                Text(meta.nombre, fontWeight = FontWeight.Bold, fontFamily = fontFamily, fontSize = 18.sp)
-                Text("Meta: \$${meta.montoTotal}", fontFamily = fontFamily, color = Color(0xFF333333))
-                Text("Ingresado: \$${String.format("%.2f", totalIngresado ?: 0.0)}", fontFamily = fontFamily, color = Color(0xFF00796B))
-                Text("Inicio: ${meta.fechaInicio} - Fin: ${meta.fechaFin}", fontFamily = fontFamily, fontSize = 12.sp)
-            }
-
-            Box(
-                modifier = Modifier.size(70.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(
-                    progress = porcentaje.toFloat(),
-                    modifier = Modifier.size(70.dp),
-                    color = Color(0xFF81D4FA),
-                    strokeWidth = 8.dp
-                )
-                Text(
-                    if (totalIngresado == null) "..." else "${(porcentaje * 100).toInt()}%",
+                Text(movimiento.descripcion,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
-                    fontFamily = fontFamily
+                    fontFamily = fontFamily,
+                    fontSize = 18.sp)
+
+                Text(
+                    text = "Monto: ${
+                        try {
+                            "$" + String.format("%.2f", movimiento.monto ?: 0.0)
+                        } catch (e: Exception) {
+                            "$0.00" 
+                        }
+                    }",
+                    fontFamily = fontFamily,
+                    color = Color(0xFFE53935)
                 )
+
+                Text("Fecha: ${movimiento.fecha}",
+                    fontFamily = fontFamily,
+                    fontSize = 12.sp)
+                Text("Descripción: ${movimiento.descripcion ?: ""}",
+                    fontFamily = fontFamily,
+                    fontSize = 12.sp)
             }
 
             Column(

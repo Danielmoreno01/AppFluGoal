@@ -47,11 +47,6 @@ fun BottomNavBar(
             selected = currentRoute == "home",
             onClick = { navController.navigate("home") }
         )
-        NavigationBarItem(
-            icon = { Icon(Icons.Filled.ShoppingCart, contentDescription = "Tienda") },
-            selected = currentRoute == "movimientos",
-            onClick = { navController.navigate("movimientos") }
-        )
 
         Box(
             modifier = Modifier.wrapContentSize(Alignment.TopCenter)
@@ -104,11 +99,6 @@ fun BottomNavBar(
             }
         }
 
-        NavigationBarItem(
-            icon = { Icon(Icons.Filled.List, contentDescription = "Gastos") },
-            selected = currentRoute == "gastos",
-            onClick = { navController.navigate("gastos") }
-        )
         NavigationBarItem(
             icon = { Icon(Icons.Filled.Person, contentDescription = "Perfil") },
             selected = currentRoute == "perfil",

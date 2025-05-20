@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.flugoal.LoginScreen
 import com.example.flugoal.ViewModel.MetaViewModel
+import com.example.flugoal.ViewModel.MovimientoViewModel
 import com.example.flugoal.ViewModel.UsuarioViewModel
 
 import com.example.flugoal.ui.screens.RegisterScreen
@@ -77,6 +78,50 @@ fun AppNavigation() {
                     metaViewModel = metaViewModel
                 )
             }
+            composable("lista_movimientos") {
+                ListaMovimientosScreen(navController, usuarioViewModel)
+            }
+
+            composable("lista_egresos") {
+                ListaEgresosScreen(navController, usuarioViewModel)
+            }
+            composable(
+                route = "editar_egreso/{movimientoId}",
+                arguments = listOf(navArgument("movimientoId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val movimientoId = backStackEntry.arguments?.getInt("movimientoId") ?: 0
+                val usuarioViewModel: UsuarioViewModel = viewModel()
+                val movimientoViewModel: MovimientoViewModel = viewModel()
+
+                EditarEgresoScreen(
+                    navController = navController,
+                    usuarioViewModel = usuarioViewModel,
+                    movimientoId = movimientoId.toLong(),
+                    movimientoViewModel = movimientoViewModel
+                )
+            }
+
+            composable("lista_ingresos") {
+                ListaIngresosScreen(navController, usuarioViewModel)
+            }
+
+            composable(
+                route = "editar_ingreso/{movimientoId}",
+                arguments = listOf(navArgument("movimientoId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val movimientoId = backStackEntry.arguments?.getInt("movimientoId") ?: 0
+                val usuarioViewModel: UsuarioViewModel = viewModel()
+                val movimientoViewModel: MovimientoViewModel = viewModel()
+
+                EditarIngresoScreen(
+                    navController = navController,
+                    usuarioViewModel = usuarioViewModel,
+                    movimientoId = movimientoId,
+                    movimientoViewModel = movimientoViewModel
+                )
+            }
+
+
         }
     }
 }

@@ -46,7 +46,6 @@ android {
 
 dependencies {
 
-    implementation("com.kizitonwose.calendar:compose:2.3.0")
     implementation("com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk:0.15.1-alpha01")
     implementation(libs.cronet.embedded)
     implementation(libs.androidx.foundation.layout.android)

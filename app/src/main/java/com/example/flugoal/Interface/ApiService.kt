@@ -68,6 +68,36 @@ interface ApiService {
     // Eliminar meta
     @DELETE("/api/metas/{id}")
     suspend fun eliminarMeta(@Path("id") id: Long): Response<Unit>
+
+    // Obtener historial de movimientos por usuario ordenados por fecha
+    @GET("/api/movimientos/usuario/{usuarioId}/historial")
+    suspend fun obtenerHistorialMovimientos(@Path("usuarioId") usuarioId: Long): Response<List<Movimiento>>
+
+    //Obtener egresos
+    @GET("/api/movimientos/usuario/{usuarioId}/egresos")
+    suspend fun obtenerEgresosPorUsuario(@Path("usuarioId") usuarioId: Long): Response<List<Movimiento>>
+
+    //Obtener ingresos
+    @GET("/api/movimientos/usuario/{usuarioId}/ingresos")
+    suspend fun obtenerIngresosPorUsuario(@Path("usuarioId") usuarioId: Long): Response<List<Movimiento>>
+
+
+    // Actualizar un movimiento
+    @PUT("/api/movimientos/{movimientoId}")
+    suspend fun actualizarMovimiento(
+        @Path("movimientoId") movimientoId: Int,
+        @Body movimiento: Movimiento
+    ): Response<Movimiento>
+
+    // Eliminar un movimiento
+    @DELETE("/api/movimientos/{movimientoId}")
+    suspend fun eliminarMovimiento(@Path("movimientoId") movimientoId: Int): Response<Unit>
+
+    // Obtener movimiento por ID
+    @GET("/api/movimientos/{movimientoId}")
+    suspend fun obtenerMovimientoPorId(@Path("movimientoId") movimientoId: Int): Response<Movimiento>
+
+
 }
 
 object RetrofitClient {
