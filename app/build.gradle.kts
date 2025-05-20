@@ -45,7 +45,8 @@ android {
 }
 
 dependencies {
-    // Librerías de Google Ads (solo una)
+
+    implementation("com.kizitonwose.calendar:compose:2.3.0")
     implementation("com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk:0.15.1-alpha01")
     implementation(libs.cronet.embedded)
     implementation(libs.androidx.foundation.layout.android)
@@ -58,25 +59,16 @@ dependencies {
     implementation(libs.androidx.foundation.layout.android)
     implementation(libs.androidx.espresso.core)
     implementation(libs.androidx.animation.core.lint)
-
-    // Core desugaring para soporte de nuevas APIs de Java
+    implementation(libs.material)
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
-
-    // Retrofit y Gson para peticiones HTTP y manejo JSON
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("com.google.code.gson:gson:2.10.1")
-
-    // Corrutinas Kotlin para tareas asincrónicas
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-
-    // ViewModel y LiveData para arquitectura MVVM
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
-
-    // Librerías básicas de Android y Jetpack Compose
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -85,8 +77,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-
-    // Testing
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)

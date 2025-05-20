@@ -5,11 +5,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.flugoal.LoginScreen
+import com.example.flugoal.ViewModel.MetaViewModel
+import com.example.flugoal.ViewModel.UsuarioViewModel
 
 import com.example.flugoal.ui.screens.RegisterScreen
 import com.example.flugoal.ui.screens.WelcomeScreen
@@ -20,7 +25,9 @@ fun AppNavigation() {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
 
-    val showBottomBar = currentRoute in bottomNavItems.map { it.route }
+    val showBottomBar = currentRoute in listOf("home")
+
+    val usuarioViewModel: UsuarioViewModel = viewModel()
 
     Scaffold(
         bottomBar = {
@@ -34,15 +41,43 @@ fun AppNavigation() {
             startDestination = "welcome",
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable("welcome") { WelcomeScreen(navController) }
-            composable("login") { LoginScreen(navController) }
-            composable("register") { RegisterScreen(navController) }
+            composable("welcome") {
+                WelcomeScreen(navController)
+            }
+            composable("login") {
+                LoginScreen(navController, usuarioViewModel)
+            }
+            composable("register") {
+                RegisterScreen(navController, usuarioViewModel)
+            }
+            composable("home") {
+                HomeScreen(navController, usuarioViewModel)
+            }
+            composable("nuevo_movimiento") {
+                NuevoMovimientoScreen(navController, usuarioViewModel)
+            }
+            composable("nueva_meta") {
+                MetasScreen(navController, usuarioViewModel)
+            }
+            composable("lista_metas") {
+                ListaMetasScreen(navController, usuarioViewModel)
+            }
+            composable(
+                route = "editar_meta/{metaId}",
+                arguments = listOf(navArgument("metaId") { type = NavType.LongType })
+            ) { backStackEntry ->
+                val metaId = backStackEntry.arguments?.getLong("metaId") ?: 0L
+                val usuarioViewModel: UsuarioViewModel = viewModel()
+                val metaViewModel: MetaViewModel = viewModel()
 
-            composable("home") { HomeScreen(navController) }
-            composable("gastos") { /* TODO: GastosScreen(navController) */ }
-            composable("ingresos") { /* TODO: IngresosScreen(navController) */ }
-            composable("perfil") { /* TODO: PerfilScreen(navController) */ }
+                EditarMetaScreen(
+                    navController = navController,
+                    usuarioViewModel = usuarioViewModel,
+                    metaId = metaId,
+                    metaViewModel = metaViewModel
+                )
+            }
         }
-
     }
 }
+

@@ -5,6 +5,7 @@ import android.graphics.Shader
 import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -24,17 +25,18 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.flugoal.Model.Usuario
 import com.example.flugoal.R
 import com.example.flugoal.ViewModel.UsuarioViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 @Composable
-fun RegisterScreen(navController: NavController, usuarioViewModel: UsuarioViewModel = viewModel()) {
+fun RegisterScreen(navController: NavController, usuarioViewModel: UsuarioViewModel) {
     val robotoFont = FontFamily(Font(R.font.concertone))
 
     var nombreCompleto by remember { mutableStateOf("") }
@@ -50,37 +52,27 @@ fun RegisterScreen(navController: NavController, usuarioViewModel: UsuarioViewMo
     var showContrasenaError by remember { mutableStateOf(false) }
     var showRepetirContrasenaError by remember { mutableStateOf(false) }
 
-    var intentoRegistro by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    // Validaciones simples sin incluir si el correo existe
     fun validarCamposLocales(): Boolean {
         var valido = true
 
         showNombreError = nombreCompleto.isBlank()
         if (showNombreError) valido = false
 
-        showCorreoError = correo.isBlank() || !android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches()
+        showCorreoError =
+            correo.isBlank() || !android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches()
         if (showCorreoError) valido = false
 
-        showContrasenaError = contrasena.length < 6
+        val tieneCaracterEspecial = contrasena.any { it.isLetterOrDigit().not() }
+        showContrasenaError = contrasena.length < 8 || !tieneCaracterEspecial
         if (showContrasenaError) valido = false
 
         showRepetirContrasenaError = repetirContrasena != contrasena || repetirContrasena.isBlank()
         if (showRepetirContrasenaError) valido = false
 
         return valido
-    }
-
-    // Si ya se intentó registrar y la verificación terminó
-    LaunchedEffect(correoExisteState, intentoRegistro, isCheckingCorreo) {
-        if (intentoRegistro && !isCheckingCorreo) {
-            if (correoExisteState == true) {
-                showCorreoError = true
-            } else {
-                navController.navigate("home") // Registro exitoso
-            }
-            intentoRegistro = false // reset
-        }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -102,6 +94,13 @@ fun RegisterScreen(navController: NavController, usuarioViewModel: UsuarioViewMo
                 ),
             contentScale = ContentScale.Crop
         )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.3f))
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -157,7 +156,12 @@ fun RegisterScreen(navController: NavController, usuarioViewModel: UsuarioViewMo
                     correo = it
                     showCorreoError = false
                 },
-                placeholder = { Text("Correo Electrónico", color = Color.White.copy(alpha = 0.7f)) },
+                placeholder = {
+                    Text(
+                        "Correo Electrónico",
+                        color = Color.White.copy(alpha = 0.7f)
+                    )
+                },
                 modifier = Modifier.fillMaxWidth(),
                 isError = showCorreoError,
                 colors = OutlinedTextFieldDefaults.colors(
@@ -175,7 +179,9 @@ fun RegisterScreen(navController: NavController, usuarioViewModel: UsuarioViewMo
                 Text(
                     text = when {
                         correo.isBlank() -> "El correo es obligatorio"
-                        !android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches() -> "Correo inválido"
+                        !android.util.Patterns.EMAIL_ADDRESS.matcher(correo)
+                            .matches() -> "Correo inválido"
+
                         correoExisteState == true -> "El correo ya está registrado"
                         else -> ""
                     },
@@ -206,11 +212,11 @@ fun RegisterScreen(navController: NavController, usuarioViewModel: UsuarioViewMo
                 ),
                 shape = RoundedCornerShape(24.dp),
                 singleLine = true,
-                visualTransformation = VisualTransformation.None
+                visualTransformation = PasswordVisualTransformation()
             )
             if (showContrasenaError) {
                 Text(
-                    text = "La contraseña debe tener al menos 6 caracteres",
+                    text = "Minimo 8 caracteres y simbolos",
                     color = Color.Red,
                     fontSize = 12.sp,
                     modifier = Modifier.align(Alignment.Start)
@@ -223,9 +229,15 @@ fun RegisterScreen(navController: NavController, usuarioViewModel: UsuarioViewMo
                 value = repetirContrasena,
                 onValueChange = {
                     repetirContrasena = it
-                    if (showRepetirContrasenaError && it == contrasena && it.isNotBlank()) showRepetirContrasenaError = false
+                    if (showRepetirContrasenaError && it == contrasena && it.isNotBlank()) showRepetirContrasenaError =
+                        false
                 },
-                placeholder = { Text("Repetir Contraseña", color = Color.White.copy(alpha = 0.7f)) },
+                placeholder = {
+                    Text(
+                        "Repetir Contraseña",
+                        color = Color.White.copy(alpha = 0.7f)
+                    )
+                },
                 modifier = Modifier.fillMaxWidth(),
                 isError = showRepetirContrasenaError,
                 colors = OutlinedTextFieldDefaults.colors(
@@ -238,7 +250,7 @@ fun RegisterScreen(navController: NavController, usuarioViewModel: UsuarioViewMo
                 ),
                 shape = RoundedCornerShape(24.dp),
                 singleLine = true,
-                visualTransformation = VisualTransformation.None
+                visualTransformation = PasswordVisualTransformation()
             )
             if (showRepetirContrasenaError) {
                 Text(
@@ -255,19 +267,18 @@ fun RegisterScreen(navController: NavController, usuarioViewModel: UsuarioViewMo
                 onClick = {
                     val camposValidos = validarCamposLocales()
                     if (camposValidos) {
-                        intentoRegistro = true
                         isCheckingCorreo = true
 
                         usuarioViewModel.verificarCorreo(correo) { correoExiste ->
                             isCheckingCorreo = false
 
-                            if (!correoExiste) {
-                                // Generar fecha de registro
-                                val fechaActual = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(
-                                    Date()
-                                )
-
-                                // Crear objeto Usuario
+                            if (correoExiste) {
+                                showCorreoError = true
+                            } else {
+                                val fechaActual = SimpleDateFormat(
+                                    "yyyy-MM-dd HH:mm:ss",
+                                    Locale.getDefault()
+                                ).format(Date())
                                 val nuevoUsuario = Usuario(
                                     nombre = nombreCompleto,
                                     email = correo,
@@ -275,13 +286,19 @@ fun RegisterScreen(navController: NavController, usuarioViewModel: UsuarioViewMo
                                     fechaRegistro = fechaActual
                                 )
 
-                                // Guardar usuario
-                                usuarioViewModel.guardarUsuario(nuevoUsuario)
+                                scope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = "¡Cuenta creada con éxito!, Bienvenido",
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
 
-                                // Navegar
-                                navController.navigate("home")
-                            } else {
-                                showCorreoError = true
+                                usuarioViewModel.guardarUsuarioYObtenerId(nuevoUsuario) { id ->
+                                    scope.launch {
+                                        delay(500)
+                                        navController.navigate("home")
+                                    }
+                                }
                             }
                         }
                     }
@@ -291,20 +308,60 @@ fun RegisterScreen(navController: NavController, usuarioViewModel: UsuarioViewMo
                     .fillMaxWidth()
                     .height(50.dp)
             ) {
-                Text(text = if (isCheckingCorreo) "Verificando..." else "Registrar", color = Color.White)
+                Text(
+                    text = if (isCheckingCorreo) "Verificando..." else "Registrar",
+                    color = Color.White
+                )
             }
-
 
             Spacer(modifier = Modifier.height(24.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("¿Ya tienes cuenta?", color = Color.White, fontSize = 14.sp)
+                Text(
+                    "¿Ya tienes cuenta?",
+                    color = Color.White,
+                    fontSize = 14.sp
+                )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Inicia sesión", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+                Text(
+                    "Inicia Sesion",
+                    color = Color.White,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.clickable {
+                        navController.navigate("login") {
+                            popUpTo("register") { inclusive = true }
+                        }
+                    }
+                )
             }
         }
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 64.dp),
+            snackbar = { data ->
+                Snackbar(
+                    modifier = Modifier
+                        .padding(horizontal = 32.dp)
+                        .defaultMinSize(minWidth = 180.dp),
+                    containerColor = Color(0xFF424242),
+                    contentColor = Color.White,
+                    shape = RoundedCornerShape(12.dp),
+                ) {
+                    Text(
+                        text = data.visuals.message,
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+        )
     }
 }

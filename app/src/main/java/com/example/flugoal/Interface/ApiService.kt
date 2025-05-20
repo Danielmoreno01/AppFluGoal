@@ -15,87 +15,63 @@ import retrofit2.http.*
 
 interface ApiService {
 
-    @GET("/api/avatares")
-    suspend fun obtenerAvatares(): List<Avatar>
-
-    @GET("/api/avatares/{id}")
-    suspend fun obtenerAvatar(@Path("id") id: Long): Avatar
-
-    @POST("/api/avatares")
-    suspend fun guardarAvatar(@Body avatar: Avatar): Avatar
-
-    @DELETE("/api/avatares/{id}")
-    suspend fun eliminarAvatar(@Path("id") id: Long)
-
-    @GET("/api/metas")
-    suspend fun obtenerMetas(): List<Meta>
-
-    @GET("/api/metas/{id}")
-    suspend fun obtenerMeta(@Path("id") id: Long): Meta
-
-    @POST("/api/metas")
-    suspend fun guardarMeta(@Body meta: Meta): Meta
-
-    @DELETE("/api/metas/{id}")
-    suspend fun eliminarMeta(@Path("id") id: Long)
-
-    @GET("/api/movimientos")
-    suspend fun obtenerMovimientos(): List<Movimiento>
-
-    @GET("/api/movimientos/{id}")
-    suspend fun obtenerMovimiento(@Path("id") id: Long): Movimiento
-
-    @POST("/api/movimientos")
-    suspend fun guardarMovimiento(@Body movimiento: Movimiento): Movimiento
-
-    @DELETE("/api/movimientos/{id}")
-    suspend fun eliminarMovimiento(@Path("id") id: Long)
-
-    @GET("/api/recompensas")
-    suspend fun obtenerRecompensas(): List<Recompensa>
-
-    @GET("/api/recompensas/{id}")
-    suspend fun obtenerRecompensa(@Path("id") id: Long): Recompensa
-
-    @POST("/api/recompensas")
-    suspend fun guardarRecompensa(@Body recompensa: Recompensa): Recompensa
-
-    @DELETE("/api/recompensas/{id}")
-    suspend fun eliminarRecompensa(@Path("id") id: Long)
-
-    @GET("/api/tareas")
-    suspend fun obtenerTareas(): List<Tarea>
-
-    @GET("/api/tareas/{id}")
-    suspend fun obtenerTarea(@Path("id") id: Long): Tarea
-
-    @POST("/api/tareas")
-    suspend fun guardarTarea(@Body tarea: Tarea): Tarea
-
-    @DELETE("/api/tareas/{id}")
-    suspend fun eliminarTarea(@Path("id") id: Long)
-
-    @GET("/api/tienda-items")
-    suspend fun obtenerItemsTienda(): List<TiendaItem>
-
-    @GET("/api/tienda-items/{id}")
-    suspend fun obtenerItemTienda(@Path("id") id: Long): TiendaItem
-
-    @POST("/api/tienda-items")
-    suspend fun guardarItemTienda(@Body item: TiendaItem): TiendaItem
-
-    @DELETE("/api/tienda-items/{id}")
-    suspend fun eliminarItemTienda(@Path("id") id: Long)
-
+    //Verificar correo al registrar
     @GET("/api/usuarios/correo/{correo}")
-    suspend fun verificarCorreoExistente(@Path("correo") correo: String): Response<Boolean>
+    suspend fun verificarCorreo(@Path("correo") correo: String): Response<Boolean>
 
+    //registrar
     @POST("/api/usuarios")
-    suspend fun guardarUsuario(@Body usuario: Usuario): Usuario
+    suspend fun guardarUsuario(@Body usuario: Usuario)
+
+    //obtenerid
+    @GET("/api/usuarios/email/{email}")
+    suspend fun obtenerUsuarioPorEmail(@Path("email") email: String): Usuario?
+
+    //obtenernombreporid
+    data class NombreResponse(val nombre: String)
+    @GET("/api/usuarios/{id}/nombre")
+    suspend fun obtenerNombreUsuario(@Path("id") id: Long): NombreResponse
+
+    //cargarmetas
+    @GET("/api/metas/usuario/{usuarioId}")
+    suspend fun obtenerMetasPorUsuario(@Path("usuarioId") usuarioId: Long): Response<List<Meta>>
+
+    //guardarmeta
+    @POST("/api/metas/usuario/{usuarioId}")
+    suspend fun guardarMeta(
+        @Path("usuarioId") usuarioId: Long,
+        @Body meta: Meta
+    ): Response<Meta>
+
+    //cargartotalahorroparaunameta
+    @GET("/api/movimientos/metas/{metaId}/ingresosMeta")
+    suspend fun obtenerTotalIngresadoEnMeta(@Path("metaId") metaId: Long): Double
+
+    //guardarmovimiento
+    @POST("/api/movimientos/usuario/{usuarioId}")
+    suspend fun guardarMovimiento(
+        @Path("usuarioId") usuarioId: Long,
+        @Body movimiento: Movimiento
+    ): Response<Movimiento>
+
+    //cuerpometaporid
+    @GET("/api/metas/{id}")
+    suspend fun obtenerMetaPorId(@Path("id") id: Long): Response<Meta>
+
+    // Actualizar meta
+    @PUT("/api/metas/{id}")
+    suspend fun actualizarMeta(
+        @Path("id") id: Long,
+        @Body meta: Meta
+    ): Response<Meta>
+
+    // Eliminar meta
+    @DELETE("/api/metas/{id}")
+    suspend fun eliminarMeta(@Path("id") id: Long): Response<Unit>
 }
 
 object RetrofitClient {
-    private const val BASE_URL = "http://10.0.2.2:8080"
+    private const val BASE_URL = "https://apiflugoal.onrender.com/"
 
     val apiService: ApiService by lazy {
         Retrofit.Builder()

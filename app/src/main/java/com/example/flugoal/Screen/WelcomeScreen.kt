@@ -25,8 +25,6 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun WelcomeScreen(navController: NavController) {
@@ -119,10 +117,4 @@ fun WelcomeScreen(navController: NavController) {
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun WelcomeScreenPreview() {
-    WelcomeScreen(navController = rememberNavController())
 }

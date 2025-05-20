@@ -1,23 +1,29 @@
 package com.example.flugoal.Repository
 
+import android.util.Log
 import com.example.flugoal.Interface.RetrofitClient
+import com.example.flugoal.Interface.RetrofitClient.apiService
 import com.example.flugoal.Model.Movimiento
 
 class MovimientoRepository {
 
-    suspend fun obtenerMovimientos(): List<Movimiento> {
-        return RetrofitClient.apiService.obtenerMovimientos()
+    suspend fun guardarMovimiento(movimiento: Movimiento, usuarioId: Long): Movimiento? {
+        return try {
+            val response = RetrofitClient.apiService.guardarMovimiento(usuarioId, movimiento)
+            if (response.isSuccessful) {
+                response.body()
+            } else {
+                Log.e("MovimientoRepository", "Error al guardar movimiento: ${response.code()} - ${response.message()}")
+                null
+            }
+        } catch (e: Exception) {
+            Log.e("MovimientoRepository", "Excepción al guardar movimiento: ${e.message}")
+            null
+        }
     }
 
-    suspend fun obtenerMovimiento(id: Long): Movimiento {
-        return RetrofitClient.apiService.obtenerMovimiento(id)
+    suspend fun obtenerTotalIngresadoEnMeta(metaId: Long): Double {
+        return apiService.obtenerTotalIngresadoEnMeta(metaId)
     }
 
-    suspend fun guardarMovimiento(movimiento: Movimiento): Movimiento {
-        return RetrofitClient.apiService.guardarMovimiento(movimiento)
-    }
-
-    suspend fun eliminarMovimiento(id: Long) {
-        RetrofitClient.apiService.eliminarMovimiento(id)
-    }
 }

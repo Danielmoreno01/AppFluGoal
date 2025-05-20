@@ -24,43 +24,62 @@ import androidx.compose.material3.*
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.flugoal.LoginScreen
 import com.example.flugoal.Model.MenuItem
+import com.example.flugoal.R
+import com.example.flugoal.ViewModel.MetaViewModel
+import com.example.flugoal.ViewModel.UsuarioViewModel
 
 @Composable
-fun HomeScreen(navController: NavController, userName: String = "Carlos") {
-    // Definición de colores para las tarjetas (colores claros variados)
+fun HomeScreen(navController: NavController, usuarioViewModel: UsuarioViewModel) {
+    val usuarioId by usuarioViewModel.usuarioId.collectAsState()
+    val nombreUsuario by usuarioViewModel.usuarioNombre.collectAsState()
+
+    LaunchedEffect(usuarioId) {
+        usuarioId?.toLongOrNull()?.let {
+            usuarioViewModel.cargarNombreUsuarioPorId(it)
+        }
+    }
+
+    val robotoFont = FontFamily(Font(R.font.concertone)) // Usa la misma fuente que en NuevoMovimientoScreen
+
     val cardColors = listOf(
-        Color(0xFFABD7B9), // Rosa claro
-        Color(0xFFE1BEE7), // Púrpura claro
-        Color(0xFFD1C4E9), // Violeta claro
-        Color(0xFFC5CAE9), // Índigo claro
-        Color(0xFFBBDEFB), // Azul claro
-        Color(0xFFB3E5FC), // Azul claro 2
-        Color(0xFFB2EBF2), // Cian claro
-        Color(0xFFB2DFDB), // Verde-azulado claro
-        Color(0xFFC8E6C9), // Verde claro
-        Color(0xFFDCEDC8)  // Verde lima claro
+        Color(0xFFABD7B9),
+        Color(0xFFE1BEE7),
+        Color(0xFFD1C4E9),
+        Color(0xFFC5CAE9),
+        Color(0xFFBBDEFB),
+        Color(0xFFB3E5FC),
+        Color(0xFFB2EBF2),
+        Color(0xFFB2DFDB),
+        Color(0xFFC8E6C9),
+        Color(0xFFDCEDC8)
     )
 
     val menuItems = listOf(
-        MenuItem("Gastos", Icons.Default.List, "gastos"),
-        MenuItem("Ingresos", Icons.Default.KeyboardArrowRight, "ingresos"),
-        MenuItem("Metas", Icons.Default.Star, "metas"),
-        MenuItem("Información", Icons.Default.Info, "info"),
-        MenuItem("Movimientos", Icons.AutoMirrored.Filled.ExitToApp, "movimientos"),
-        MenuItem("Recompensas", Icons.Default.Favorite, "recompensas"),
+        MenuItem("Informacion General", Icons.Default.Info, "info"),
+        MenuItem("Ver Metas", Icons.Default.Star, "lista_metas"), // *
+        MenuItem("Historial de Movimientos", Icons.AutoMirrored.Filled.ExitToApp, "historial_movimientos"),
+        MenuItem("Historial de Egresos", Icons.Default.List, "egresos"),
+        MenuItem("Historial de Ingresos", Icons.Default.KeyboardArrowRight, "ingresos"),
+        MenuItem("Historial de Ingresos a Metas", Icons.Default.Favorite, "ingresos_metas"),
+        MenuItem("Dinero Ahorrado", Icons.Default.Star, "dinero_ahorrado"),
         MenuItem("Tareas", Icons.Default.CheckCircle, "tareas"),
         MenuItem("Avatares", Icons.Default.AccountCircle, "avatares"),
         MenuItem("Tienda", Icons.Default.ShoppingCart, "tienda"),
@@ -70,10 +89,10 @@ fun HomeScreen(navController: NavController, userName: String = "Carlos") {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F5F5)) // Fondo gris muy claro en lugar de verde
+            .background(Color(0xFFF5F5F5))
             .padding(16.dp)
     ) {
-        // Header con título y usuario
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -81,28 +100,29 @@ fun HomeScreen(navController: NavController, userName: String = "Carlos") {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Título principal
+
             Text(
-                "Finanzas Personales",  // Cambio de "Mi Finanzas" a "Finanzas Personales"
+                "Finanzas Personales",
                 fontSize = 26.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF3949AB) // Azul índigo en lugar de verde
+                color = Color(0xFF080C23),
+                fontFamily = robotoFont
             )
 
-            // Perfil de usuario
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = userName,
-                    fontWeight = FontWeight.Medium,
+                    text = if (nombreUsuario.isNotEmpty()) nombreUsuario else "?",
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
-                    color = Color(0xFF000000) // Azul índigo en lugar de verde
+                    fontFamily = robotoFont
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Card(
                     shape = CircleShape,
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFF000000)), // Índigo
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF000000)),
                     modifier = Modifier.size(36.dp)
                 ) {
                     Box(
@@ -110,19 +130,19 @@ fun HomeScreen(navController: NavController, userName: String = "Carlos") {
                         modifier = Modifier.fillMaxSize()
                     ) {
                         Text(
-                            text = userName.first().toString().uppercase(),
-                            color = Color.White,
+                            text = if (nombreUsuario.isNotEmpty()) nombreUsuario.first().toString().uppercase() else "?",
+                            color = Color(0xFF58D5E5),
                             fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp
+                            fontSize = 16.sp,
+                            fontFamily = robotoFont
                         )
                     }
                 }
             }
         }
 
-        // Línea divisoria
         Divider(
-            color = Color(0xFFBDBDBD), // Gris en lugar de verde
+            color = Color(0xFFBDBDBD),
             thickness = 1.dp,
             modifier = Modifier.padding(bottom = 16.dp)
         )
@@ -134,7 +154,7 @@ fun HomeScreen(navController: NavController, userName: String = "Carlos") {
             modifier = Modifier.fillMaxSize()
         ) {
             itemsIndexed(menuItems) { index, item ->
-                // Usar color diferente para cada tarjeta basado en el índice
+
                 MenuCard(
                     title = item.title,
                     icon = item.icon,
@@ -146,6 +166,7 @@ fun HomeScreen(navController: NavController, userName: String = "Carlos") {
         }
     }
 }
+
 
 @Composable
 fun MenuCard(
@@ -184,7 +205,7 @@ fun MenuCard(
                 Icon(
                     icon,
                     contentDescription = title,
-                    tint = Color(0xFF000000), // Azul índigo en lugar de verde
+                    tint = Color(0xFF000000),
                     modifier = Modifier.size(32.dp)
                 )
             }
@@ -198,12 +219,4 @@ fun MenuCard(
             )
         }
     }
-}
-
-data class MenuItem(val title: String, val icon: ImageVector, val route: String)
-
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen(navController = rememberNavController())
 }
