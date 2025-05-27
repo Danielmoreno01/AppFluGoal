@@ -109,7 +109,7 @@ fun EditarIngresoScreen(
             montoState.value = it.monto?.toString() ?: ""
             fechaState.value = it.fecha ?: ""
             descripcionState.value = it.descripcion ?: ""
-            tipoState.value = it.descripcion ?: "Ingreso"
+            tipoState.value = it.tipo ?: "Ingreso"
         }
     }
 

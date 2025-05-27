@@ -17,7 +17,7 @@ class MetaViewModel : ViewModel() {
     private val _metas = MutableStateFlow<List<Meta>>(emptyList())
     val metas: StateFlow<List<Meta>> = _metas
 
-    private val _metaSeleccionada = MutableStateFlow<Meta?>(null)
+    public val _metaSeleccionada = MutableStateFlow<Meta?>(null)
     val metaSeleccionada: StateFlow<Meta?> = _metaSeleccionada
 
     fun cargarMetasPorUsuario(usuarioId: String) {

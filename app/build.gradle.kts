@@ -59,6 +59,8 @@ dependencies {
     implementation(libs.androidx.espresso.core)
     implementation(libs.androidx.animation.core.lint)
     implementation(libs.material)
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.protolite.well.known.types)
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")

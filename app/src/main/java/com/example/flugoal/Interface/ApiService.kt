@@ -81,6 +81,13 @@ interface ApiService {
     @GET("/api/movimientos/usuario/{usuarioId}/ingresos")
     suspend fun obtenerIngresosPorUsuario(@Path("usuarioId") usuarioId: Long): Response<List<Movimiento>>
 
+    // Obtener ingresos destinados a metas por usuario
+    @GET("/api/movimientos/usuario/{usuarioId}/ingresos_metas")
+    suspend fun obtenerIngresosMetasPorUsuario(@Path("usuarioId") usuarioId: Long): Response<List<Movimiento>>
+
+    // Obtener ahorros por usuario
+    @GET("/api/movimientos/usuario/{usuarioId}/ahorros")
+    suspend fun obtenerAhorrosPorUsuario(@Path("usuarioId") usuarioId: Long): Response<List<Movimiento>>
 
     // Actualizar un movimiento
     @PUT("/api/movimientos/{movimientoId}")
@@ -96,7 +103,6 @@ interface ApiService {
     // Obtener movimiento por ID
     @GET("/api/movimientos/{movimientoId}")
     suspend fun obtenerMovimientoPorId(@Path("movimientoId") movimientoId: Int): Response<Movimiento>
-
 
 }
 

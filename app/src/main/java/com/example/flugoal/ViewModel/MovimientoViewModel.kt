@@ -34,6 +34,12 @@ class MovimientoViewModel : ViewModel() {
     private val _movimientoSeleccionado = MutableStateFlow<Movimiento?>(null)
     val movimientoSeleccionado: StateFlow<Movimiento?> get() = _movimientoSeleccionado
 
+    private val _ingresosMetasMovimientos = MutableStateFlow<List<Movimiento>>(emptyList())
+    val ingresosMetasMovimientos: StateFlow<List<Movimiento>> get() = _ingresosMetasMovimientos
+
+    private val _ahorrosMovimientos = MutableStateFlow<List<Movimiento>>(emptyList())
+    val ahorrosMovimientos: StateFlow<List<Movimiento>> get() = _ahorrosMovimientos
+
     fun cargarTotalIngresadoEnMeta(metaId: Long) {
         viewModelScope.launch {
             try {
@@ -149,6 +155,42 @@ class MovimientoViewModel : ViewModel() {
             } catch (e: Exception) {
                 Log.e("MovimientoViewModel", "Error al cargar ingresos", e)
                 _ingresosMovimientos.value = emptyList()
+            }
+        }
+    }
+
+    fun cargarIngresosMetasPorUsuario(usuarioId: String) {
+        viewModelScope.launch {
+            try {
+                val idLong = usuarioId.toLongOrNull()
+                if (idLong != null) {
+                    val lista = repository.obtenerIngresosMetasPorUsuario(idLong)
+                    _ingresosMetasMovimientos.value = lista
+                } else {
+                    Log.e("MovimientoViewModel", "ID inválido para cargar ingresos a metas")
+                    _ingresosMetasMovimientos.value = emptyList()
+                }
+            } catch (e: Exception) {
+                Log.e("MovimientoViewModel", "Error al cargar ingresos a metas", e)
+                _ingresosMetasMovimientos.value = emptyList()
+            }
+        }
+    }
+
+    fun cargarAhorrosPorUsuario(usuarioId: String) {
+        viewModelScope.launch {
+            try {
+                val idLong = usuarioId.toLongOrNull()
+                if (idLong != null) {
+                    val lista = repository.obtenerAhorrosPorUsuario(idLong)
+                    _ahorrosMovimientos.value = lista
+                } else {
+                    Log.e("MovimientoViewModel", "ID inválido para cargar ahorros")
+                    _ahorrosMovimientos.value = emptyList()
+                }
+            } catch (e: Exception) {
+                Log.e("MovimientoViewModel", "Error al cargar ahorros", e)
+                _ahorrosMovimientos.value = emptyList()
             }
         }
     }

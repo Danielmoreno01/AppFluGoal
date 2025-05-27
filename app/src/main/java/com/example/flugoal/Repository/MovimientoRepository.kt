@@ -71,6 +71,36 @@ class MovimientoRepository {
         }
     }
 
+    suspend fun obtenerIngresosMetasPorUsuario(usuarioId: Long): List<Movimiento> {
+        return try {
+            val response = RetrofitClient.apiService.obtenerIngresosMetasPorUsuario(usuarioId)
+            if (response.isSuccessful) {
+                response.body() ?: emptyList()
+            } else {
+                Log.e("MovimientoRepository", "Error al obtener ingresos para metas: ${response.code()} - ${response.message()}")
+                emptyList()
+            }
+        } catch (e: Exception) {
+            Log.e("MovimientoRepository", "Excepción al obtener ingresos para metas: ${e.message}")
+            emptyList()
+        }
+    }
+
+    suspend fun obtenerAhorrosPorUsuario(usuarioId: Long): List<Movimiento> {
+        return try {
+            val response = RetrofitClient.apiService.obtenerAhorrosPorUsuario(usuarioId)
+            if (response.isSuccessful) {
+                response.body() ?: emptyList()
+            } else {
+                Log.e("MovimientoRepository", "Error al obtener ahorros: ${response.code()} - ${response.message()}")
+                emptyList()
+            }
+        } catch (e: Exception) {
+            Log.e("MovimientoRepository", "Excepción al obtener ahorros: ${e.message}")
+            emptyList()
+        }
+    }
+
     suspend fun actualizarMovimiento(movimientoId: Int, movimiento: Movimiento): Movimiento? {
         return try {
             val response = RetrofitClient.apiService.actualizarMovimiento(movimientoId, movimiento)

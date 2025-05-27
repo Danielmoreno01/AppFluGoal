@@ -3,6 +3,7 @@ package com.example.flugoal.Screen
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -26,7 +27,7 @@ fun AppNavigation() {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
 
-    val showBottomBar = currentRoute in listOf("home")
+    val showBottomBar = currentRoute in listOf("home", "perfil")
 
     val usuarioViewModel: UsuarioViewModel = viewModel()
 
@@ -121,6 +122,54 @@ fun AppNavigation() {
                 )
             }
 
+            composable("lista_ingresos_metas") {
+                ListaIngresosMetasScreen(navController, usuarioViewModel)
+            }
+
+            composable(
+                route = "editar_ingreso_meta/{movimientoId}",
+                arguments = listOf(navArgument("movimientoId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val movimientoId = backStackEntry.arguments?.getInt("movimientoId") ?: 0
+
+                val usuarioViewModel: UsuarioViewModel = viewModel()
+                val movimientoViewModel: MovimientoViewModel = viewModel()
+                val metaViewModel: MetaViewModel = viewModel()
+
+                val usuarioId = usuarioViewModel.usuarioId.collectAsState().value ?: ""
+
+                EditarIngresoMetaScreen(
+                    movimientoId = movimientoId,
+                    navController = navController,
+                    movimientoViewModel = movimientoViewModel,
+                    usuarioId = usuarioId,
+                    metaViewModel = metaViewModel
+                )
+            }
+
+            composable("lista_ahorros") {
+                ListaAhorrosScreen(navController, usuarioViewModel)
+            }
+
+            composable(
+                route = "editar_ahorro/{movimientoId}",
+                arguments = listOf(navArgument("movimientoId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val movimientoId = backStackEntry.arguments?.getInt("movimientoId") ?: 0
+                val usuarioViewModel: UsuarioViewModel = viewModel()
+                val movimientoViewModel: MovimientoViewModel = viewModel()
+
+                EditarAhorroScreen(
+                    navController = navController,
+                    usuarioViewModel = usuarioViewModel,
+                    movimientoId = movimientoId,
+                    movimientoViewModel = movimientoViewModel
+                )
+            }
+
+            composable("perfil") {
+                AvatarScreen(navController, usuarioViewModel)
+            }
 
         }
     }

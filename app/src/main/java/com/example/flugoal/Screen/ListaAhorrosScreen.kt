@@ -63,10 +63,10 @@ import com.example.flugoal.ViewModel.UsuarioViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListaEgresosScreen(navController: NavController, usuarioViewModel: UsuarioViewModel) {
+fun ListaAhorrosScreen(navController: NavController, usuarioViewModel: UsuarioViewModel) {
     val usuarioId = usuarioViewModel.usuarioId.collectAsState().value
     val movimientoViewModel: MovimientoViewModel = viewModel()
-    val egresosMovimientos by movimientoViewModel.egresosMovimientos.collectAsState()
+    val ahorrosMovimientos by movimientoViewModel.ahorrosMovimientos.collectAsState()
     val robotoFont = FontFamily(Font(R.font.concertone))
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
@@ -79,7 +79,7 @@ fun ListaEgresosScreen(navController: NavController, usuarioViewModel: UsuarioVi
     )
 
     LaunchedEffect(usuarioId) {
-        usuarioId?.let { movimientoViewModel.cargarEgresosPorUsuario(it) }
+        usuarioId?.let { movimientoViewModel.cargarAhorrosPorUsuario(it) }
     }
 
     Scaffold(
@@ -89,7 +89,7 @@ fun ListaEgresosScreen(navController: NavController, usuarioViewModel: UsuarioVi
             TopAppBar(
                 title = {
                     Text(
-                        text = "Mis Egresos",
+                        text = "Mis Ahorros",
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF080C23),
@@ -107,24 +107,29 @@ fun ListaEgresosScreen(navController: NavController, usuarioViewModel: UsuarioVi
             }
         }
     ) { padding ->
-        Column(modifier = Modifier
-            .padding(padding)
-            .fillMaxSize()
-            .background(animatedColor)) {
-
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .background(animatedColor)
+        ) {
             LazyColumn {
-                items(egresosMovimientos) { movimiento ->
-                    EgresoItemStyled(
+                items(ahorrosMovimientos) { movimiento ->
+                    AhorroItemStyled(
                         movimiento = movimiento,
                         fontFamily = robotoFont,
                         onEdit = {
-                            movimiento.id?.let { navController.navigate("editar_egreso/$it") }
+                            movimiento.id?.let { navController.navigate("editar_ahorro/$it") }
                         },
                         onDelete = {
                             movimiento.id?.let {
                                 movimientoViewModel.eliminarMovimiento(it.toInt(),
-                                    onSuccess = { usuarioId?.let { id -> movimientoViewModel.cargarEgresosPorUsuario(id.toString()) } },
-                                    onError = { errorMsg -> Log.e("ListaEgresosScreen", "Error: $errorMsg") }
+                                    onSuccess = {
+                                        usuarioId?.let { id ->
+                                            movimientoViewModel.cargarAhorrosPorUsuario(id)
+                                        }
+                                    },
+                                    onError = { errorMsg -> Log.e("ListaAhorrosScreen", "Error: $errorMsg") }
                                 )
                             }
                         }
@@ -134,8 +139,9 @@ fun ListaEgresosScreen(navController: NavController, usuarioViewModel: UsuarioVi
         }
     }
 }
+
 @Composable
-fun EgresoItemStyled(
+fun AhorroItemStyled(
     movimiento: Movimiento,
     fontFamily: FontFamily,
     onEdit: () -> Unit,
@@ -154,29 +160,25 @@ fun EgresoItemStyled(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column(Modifier.weight(1f)) {
-                Text(movimiento.tipo,
+                Text(
+                    movimiento.tipo,
                     fontWeight = FontWeight.Bold,
                     fontFamily = fontFamily,
-                    fontSize = 18.sp)
-
+                    fontSize = 18.sp
+                )
                 Text(
                     text = "Monto: ${
                         try {
                             "$" + String.format("%.2f", movimiento.monto ?: 0.0)
                         } catch (e: Exception) {
-                            "$0.00" 
+                            "$0.00"
                         }
                     }",
                     fontFamily = fontFamily,
-                    color = Color(0xFFE53935)
+                    color = Color(0xFF43A047)
                 )
-
-                Text("Fecha: ${movimiento.fecha}",
-                    fontFamily = fontFamily,
-                    fontSize = 12.sp)
-                Text("Descripción: ${movimiento.descripcion ?: ""}",
-                    fontFamily = fontFamily,
-                    fontSize = 12.sp)
+                Text("Fecha: ${movimiento.fecha}", fontFamily = fontFamily, fontSize = 12.sp)
+                Text("Descripción: ${movimiento.descripcion ?: ""}", fontFamily = fontFamily, fontSize = 12.sp)
             }
 
             Column(

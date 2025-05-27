@@ -1,5 +1,6 @@
 package com.example.flugoal.Screen
 
+import android.app.DatePickerDialog
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -36,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.flugoal.R
 import com.example.flugoal.ViewModel.MovimientoViewModel
@@ -44,12 +46,13 @@ import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditarEgresoScreen(
-    navController: NavHostController,
-    usuarioViewModel: UsuarioViewModel,
-    movimientoId: Long,
-    movimientoViewModel: MovimientoViewModel = viewModel()
+fun EditarAhorroScreen(
+    navController: NavController,
+    movimientoId: Int,
+    movimientoViewModel: MovimientoViewModel = viewModel(),
+    usuarioViewModel: UsuarioViewModel
 ) {
+    val movimientoSeleccionado by movimientoViewModel.movimientoSeleccionado.collectAsState()
     val usuarioId = usuarioViewModel.usuarioId.collectAsState().value
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
@@ -57,34 +60,28 @@ fun EditarEgresoScreen(
     val interactionSource = remember { MutableInteractionSource() }
     val showSuccessMessage = remember { mutableStateOf(false) }
 
-    // Estados para los campos
     val montoState = remember { mutableStateOf("") }
     val fechaState = remember { mutableStateOf("") }
     val descripcionState = remember { mutableStateOf("") }
-    val tipoState = remember { mutableStateOf("Egreso") } // Por defecto "Egreso", no editable
+    val tipoState = remember { mutableStateOf("Ahorro") }
 
-    // Observa el movimiento cargado desde ViewModel
-    val movimientoSeleccionado by movimientoViewModel.movimientoSeleccionado.collectAsState()
+    LaunchedEffect(movimientoId) {
+        movimientoViewModel.cargarMovimientoPorId(movimientoId)
+    }
 
-    // Cuando cambie el movimientoSeleccionado, actualizamos los campos
     LaunchedEffect(movimientoSeleccionado) {
         movimientoSeleccionado?.let {
             montoState.value = it.monto?.toString() ?: ""
             fechaState.value = it.fecha ?: ""
             descripcionState.value = it.descripcion ?: ""
-            tipoState.value = it.tipo ?: "Egreso"
+            tipoState.value = it.tipo ?: "Ahorro"
         }
-    }
-
-    // Carga el movimiento por ID al entrar a la pantalla
-    LaunchedEffect(movimientoId) {
-        movimientoViewModel.cargarMovimientoPorId(movimientoId.toInt())
     }
 
     LaunchedEffect(interactionSource) {
         interactionSource.interactions.collect { interaction ->
             if (interaction is PressInteraction.Release) {
-                android.app.DatePickerDialog(
+                DatePickerDialog(
                     context,
                     { _, year, month, dayOfMonth ->
                         val selectedDate = String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth)
@@ -106,7 +103,7 @@ fun EditarEgresoScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Editar Egreso",
+            text = "Editar Ahorro",
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF080C23),
@@ -125,7 +122,7 @@ fun EditarEgresoScreen(
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "¡Egreso actualizado correctamente!",
+                    text = "¡Ahorro actualizado correctamente!",
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
@@ -143,8 +140,7 @@ fun EditarEgresoScreen(
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color.White,
                 focusedIndicatorColor = Color(0xFF080C23),
-                unfocusedIndicatorColor = Color.Gray,
-                disabledTextColor = Color.DarkGray
+                unfocusedIndicatorColor = Color.Gray
             ),
             modifier = Modifier.fillMaxWidth()
         )
@@ -215,7 +211,7 @@ fun EditarEgresoScreen(
                 ) ?: return@Button
 
                 movimientoViewModel.actualizarMovimiento(
-                    movimientoId.toInt(),
+                    movimientoId,
                     movimientoEditado,
                     onSuccess = {
                         showSuccessMessage.value = true
