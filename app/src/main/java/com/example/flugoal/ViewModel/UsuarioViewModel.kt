@@ -3,7 +3,6 @@ package com.example.flugoal.ViewModel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.flugoal.Model.Meta
 import com.example.flugoal.Model.Usuario
 import com.example.flugoal.Repository.UsuarioRepository
 import kotlinx.coroutines.delay
@@ -24,6 +23,10 @@ class UsuarioViewModel : ViewModel() {
         _usuarioId.value = id
     }
 
+    fun cerrarSesion() {
+        _usuarioId.value = null
+        _usuarioNombre.value = ""
+    }
     fun guardarUsuarioYObtenerId(usuario: Usuario, onSuccess: (Long) -> Unit) {
         viewModelScope.launch {
             try {

@@ -101,13 +101,11 @@ fun HomeScreen(navController: NavController, usuarioViewModel: UsuarioViewModel)
                 )
             )
     ) {
-        // Header Section
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            // Top Bar
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -125,7 +123,6 @@ fun HomeScreen(navController: NavController, usuarioViewModel: UsuarioViewModel)
 
             }
 
-            // Welcome Message
             Text(
                 text = "Hola, ${if (nombreUsuario.isNotEmpty()) nombreUsuario else "Usuario"}",
                 fontSize = 28.sp,
@@ -143,7 +140,6 @@ fun HomeScreen(navController: NavController, usuarioViewModel: UsuarioViewModel)
                 modifier = Modifier.padding(bottom = 24.dp)
             )
 
-            // Dashboard Cards
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -166,7 +162,6 @@ fun HomeScreen(navController: NavController, usuarioViewModel: UsuarioViewModel)
             }
         }
 
-        // Menu Cards Section
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             verticalArrangement = Arrangement.spacedBy(12.dp),

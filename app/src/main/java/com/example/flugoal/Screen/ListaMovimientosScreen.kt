@@ -70,10 +70,9 @@ fun ListaMovimientosScreen(
         animationSpec = infiniteRepeatable(tween(4000, easing = LinearEasing), RepeatMode.Reverse)
     )
 
-    // Carga el historial solo si usuarioId NO es nulo
     LaunchedEffect(usuarioId) {
         usuarioId?.let {
-            movimientoViewModel.cargarHistorialMovimientos(it.toString())
+            movimientoViewModel.cargarHistorialMovimientos(it)
         }
     }
 
@@ -109,7 +108,6 @@ fun ListaMovimientosScreen(
                 .background(animatedColor)
         ) {
             if (movimientos.isEmpty()) {
-                // Puedes mostrar un texto o animación cuando no hay movimientos
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Text(
                         text = "No hay movimientos registrados",

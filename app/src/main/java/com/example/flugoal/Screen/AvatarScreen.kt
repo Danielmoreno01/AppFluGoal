@@ -9,12 +9,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -52,7 +46,6 @@ fun AvatarScreen(navController: NavController, usuarioViewModel: UsuarioViewMode
                 )
             )
     ) {
-        // Header
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -79,20 +72,8 @@ fun AvatarScreen(navController: NavController, usuarioViewModel: UsuarioViewMode
                 color = Color.Black,
                 fontFamily = robotoFont
             )
-
-            /*IconButton(
-                onClick = { /* Editar perfil */ }
-            ) {
-                Icon(
-                    Icons.Default.Edit,
-                    contentDescription = "Editar",
-                    tint = Color.White,
-                    modifier = Modifier.size(24.dp)
-                )
-            }*/
         }
 
-        // Profile Section
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -100,7 +81,6 @@ fun AvatarScreen(navController: NavController, usuarioViewModel: UsuarioViewMode
                 .padding(horizontal = 16.dp)
                 .padding(bottom = 32.dp)
         ) {
-            // Profile Picture
             Card(
                 shape = CircleShape,
                 colors = CardDefaults.cardColors(containerColor = Color.Black),
@@ -124,7 +104,6 @@ fun AvatarScreen(navController: NavController, usuarioViewModel: UsuarioViewMode
                 }
             }
 
-            // User Name
             Text(
                 text = if (nombreUsuario.isNotEmpty()) nombreUsuario else "Usuario",
                 fontSize = 24.sp,
@@ -154,7 +133,13 @@ fun AvatarScreen(navController: NavController, usuarioViewModel: UsuarioViewMode
                     title = "Cerrar Sesión",
                     subtitle = "Salir de tu cuenta",
                     icon = Icons.AutoMirrored.Filled.ExitToApp,
-                    onClick = { navController.navigate("login") },
+                    onClick = {
+                        usuarioViewModel.cerrarSesion()
+                        navController.navigate("login") {
+                            popUpTo("home") { inclusive = true }
+                        }
+                    }
+                    ,
                     isDestructive = true
                 )
             }

@@ -22,7 +22,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.flugoal.Model.Meta
 import com.example.flugoal.Model.Movimiento
-import com.example.flugoal.Model.Usuario
 import com.example.flugoal.R
 import com.example.flugoal.ViewModel.MetaViewModel
 import com.example.flugoal.ViewModel.MovimientoViewModel

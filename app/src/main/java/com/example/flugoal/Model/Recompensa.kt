@@ -4,6 +4,6 @@ data class Recompensa(
     val id: Long? = null,
     val tipo: String,
     val valor: Int,
-    val fecha: String, // formato ISO 8601: "yyyy-MM-dd"
+    val fecha: String,
     val usuario: Usuario? = null
 )

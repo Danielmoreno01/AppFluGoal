@@ -1,6 +1,5 @@
 package com.example.flugoal.Screen
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -23,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.flugoal.Model.Meta
 import com.example.flugoal.R
 import com.example.flugoal.ViewModel.MetaViewModel
 import com.example.flugoal.ViewModel.UsuarioViewModel
@@ -41,7 +39,6 @@ fun EditarMetaScreen(
     metaId: Long,
     metaViewModel: MetaViewModel = viewModel()
 ) {
-    val usuarioId = usuarioViewModel.usuarioId.collectAsState().value
     val context = LocalContext.current
     val calendar = Calendar.getInstance()
     val robotoFont = FontFamily(Font(R.font.concertone))
@@ -50,20 +47,17 @@ fun EditarMetaScreen(
 
     val metaSeleccionada by metaViewModel.metaSeleccionada.collectAsState()
 
-    // Estados que dependen de metaSeleccionada, actualizan automáticamente
     val nombreState = remember(metaSeleccionada) { mutableStateOf(metaSeleccionada?.nombre ?: "") }
     val montoState = remember(metaSeleccionada) { mutableStateOf(metaSeleccionada?.montoTotal?.toString() ?: "") }
     val fechaInicioState = remember(metaSeleccionada) { mutableStateOf(metaSeleccionada?.fechaInicio ?: "") }
     val fechaFinState = remember(metaSeleccionada) { mutableStateOf(metaSeleccionada?.fechaFin ?: "") }
 
-    // Cargar meta al iniciar
     LaunchedEffect(metaId) {
         metaViewModel.cargarMetaPorId(metaId) {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
     }
 
-    // DatePicker para fechaFin
     LaunchedEffect(interactionSource) {
         interactionSource.interactions.collect { interaction ->
             if (interaction is PressInteraction.Release) {

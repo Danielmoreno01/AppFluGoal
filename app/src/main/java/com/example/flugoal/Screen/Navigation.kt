@@ -151,6 +151,10 @@ fun AppNavigation() {
                 ListaAhorrosScreen(navController, usuarioViewModel)
             }
 
+            composable("info") {
+                InformacionScreen(navController, usuarioViewModel)
+            }
+
             composable(
                 route = "editar_ahorro/{movimientoId}",
                 arguments = listOf(navArgument("movimientoId") { type = NavType.IntType })

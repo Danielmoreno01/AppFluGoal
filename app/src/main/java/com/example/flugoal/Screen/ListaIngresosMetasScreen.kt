@@ -39,7 +39,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -60,7 +59,6 @@ fun ListaIngresosMetasScreen(navController: NavController, usuarioViewModel: Usu
     val movimientoViewModel: MovimientoViewModel = viewModel()
     val ingresosMovimientos by movimientoViewModel.ingresosMetasMovimientos.collectAsState()
     val robotoFont = FontFamily(Font(R.font.concertone))
-    val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
 
     val infiniteTransition = rememberInfiniteTransition()

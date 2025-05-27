@@ -25,6 +25,9 @@ import android.os.Build
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,6 +41,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import com.example.flugoal.ViewModel.UsuarioViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
@@ -53,6 +57,7 @@ fun LoginScreen(navController: NavController, usuarioViewModel: UsuarioViewModel
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    var passwordVisible by remember { mutableStateOf(false) }
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -134,7 +139,7 @@ fun LoginScreen(navController: NavController, usuarioViewModel: UsuarioViewModel
                 placeholder = {
                     Text("Contraseña", color = Color.White.copy(alpha = 0.7f))
                 },
-                visualTransformation = PasswordVisualTransformation(),
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
                     unfocusedBorderColor = Color.White.copy(alpha = 0.5f),
@@ -153,7 +158,15 @@ fun LoginScreen(navController: NavController, usuarioViewModel: UsuarioViewModel
                     onDone = {
                         keyboardController?.hide()
                     }
-                )
+                ),
+                trailingIcon = {
+                    val icon = if (passwordVisible) Icons.Default.Check else Icons.Default.Search
+                    val description = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña"
+
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(imageVector = icon, contentDescription = description, tint = Color.White)
+                    }
+                }
             )
 
             if (showError) {

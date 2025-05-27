@@ -57,16 +57,13 @@ fun EditarEgresoScreen(
     val interactionSource = remember { MutableInteractionSource() }
     val showSuccessMessage = remember { mutableStateOf(false) }
 
-    // Estados para los campos
     val montoState = remember { mutableStateOf("") }
     val fechaState = remember { mutableStateOf("") }
     val descripcionState = remember { mutableStateOf("") }
-    val tipoState = remember { mutableStateOf("Egreso") } // Por defecto "Egreso", no editable
+    val tipoState = remember { mutableStateOf("Egreso") }
 
-    // Observa el movimiento cargado desde ViewModel
     val movimientoSeleccionado by movimientoViewModel.movimientoSeleccionado.collectAsState()
 
-    // Cuando cambie el movimientoSeleccionado, actualizamos los campos
     LaunchedEffect(movimientoSeleccionado) {
         movimientoSeleccionado?.let {
             montoState.value = it.monto?.toString() ?: ""

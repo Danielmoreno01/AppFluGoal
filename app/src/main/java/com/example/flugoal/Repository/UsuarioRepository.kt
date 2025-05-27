@@ -2,7 +2,6 @@ package com.example.flugoal.Repository
 
 import com.example.flugoal.Interface.RetrofitClient
 import com.example.flugoal.Interface.RetrofitClient.apiService
-import com.example.flugoal.Model.Meta
 import com.example.flugoal.Model.Usuario
 
 class UsuarioRepository {
@@ -29,17 +28,4 @@ class UsuarioRepository {
         return apiService.obtenerNombreUsuario(id).nombre
     }
 
-    suspend fun obtenerMetasPorUsuario(usuarioId: Long): List<Meta>? {
-        return try {
-            val response = apiService.obtenerMetasPorUsuario(usuarioId)
-            if (response.isSuccessful) {
-                response.body() // Retorna la lista de metas si la respuesta es exitosa
-            } else {
-                null // Retorna null si la respuesta no es exitosa
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null // Retorna null en caso de error
-        }
-    }
 }
